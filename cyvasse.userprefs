@@ -1,0 +1,14 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\pieces\Plebe.js">
+    <Files>
+      <File FileName="Assets\Scripts\pieces\Plebe.js" Line="13" Column="21" />
+      <File FileName="Assets\Scripts\GameTile.js" Line="29" Column="28" />
+      <File FileName="Assets\Scripts\Board.js" Line="32" Column="18" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
