@@ -26,21 +26,17 @@ function Activate(){
 }
 
 function OnMouseEnter(){
-	if(!this.gameBoard.isSetUp){
-		//open select piece screen
-	
-	}else{	
-	 	Debug.Log ("Ativando: "+name+" do tipo: "+this.landType);
-		this.gameBoard.displayText = "ativando: "+name+" do tipo: "+this.landType;
-		if(!isActive){
-			if(!gameBoard.ballSet){
-				renderer.material.color=Color.yellow;
-			}else{
-				renderer.material.color=Color.green;
-			}
-			transform.position=new Vector3(currentPosition.x,.5,currentPosition.z);
+ 	//Debug.Log ("Ativando: "+name+" do tipo: "+this.landType);
+	this.gameBoard.displayText = "ativando: "+name+" do tipo: "+this.landType;
+	if(!isActive){
+		if(!gameBoard.ballSet){
+			renderer.material.color=Color.yellow;
+		}else{
+			renderer.material.color=Color.green;
 		}
+		transform.position=new Vector3(currentPosition.x,.5,currentPosition.z);
 	}
+	
 }
 
 function OnMouseExit(){
@@ -51,7 +47,13 @@ function OnMouseExit(){
 }
 
 function OnMouseDown(){
-	if(gameBoard.ballSet){
-		Activate();
+	if(!this.gameBoard.isSetUp){
+		//open select piece screen
+		this.gameBoard.showPiecesToSet(this);
+	}else{
+		//movimentar pecas
+		if(gameBoard.ballSet){
+			Activate();
+		}
 	}
 }
