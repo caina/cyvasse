@@ -9,6 +9,8 @@ public class GameManager : Photon.MonoBehaviour {
 	public bool isFirstPlayer = true;
 	private Chat chat;
 	public Board gameBoard;
+	public int playerRound = 0;
+	public int playerTime;
 	
     void OnJoinedRoom()
     {
@@ -20,6 +22,25 @@ public class GameManager : Photon.MonoBehaviour {
 	void SendChatMessage(string message){
 		chat.chatInput = message;
 		chat.SendChat(PhotonTargets.All);
+	}
+	
+	/***
+	 * Muda o turno atual.
+	 * Comeca sempre com o player 1*/
+	public void nextRound(){
+		photonView.RPC("changeRound",PhotonTargets.All);
+	}
+	
+	void changeRound(){
+		playerRound = (playerRound==1?0:1);	
+	}
+	
+	/***
+	 * Compara a rodada atual com o 
+	 * identificador do jogador.
+	 * */
+	public bool isMyRound(){
+		return playerTime == playerRound;
 	}
     
     IEnumerator OnLeftRoom()
@@ -57,7 +78,8 @@ public class GameManager : Photon.MonoBehaviour {
 	[RPC]
 	void PlayerConnected(){
 		if(isFirstPlayer){
-			isFirstPlayer = false;	
+			isFirstPlayer = false;
+			playerTime = 0;
 		}else{
 		/*
 			Camera.main.transform.position = new Vector3(0f,6.84f,-5.7f);
@@ -65,18 +87,21 @@ public class GameManager : Photon.MonoBehaviour {
 			Camera.main.transform.rotation = Quaternion.Euler(53.65f,rot.x,rot.y);	
 			
 			*/
+		
+			playerTime = 1;
 			RequestshuffleParts();
 		
 		}
+		RequestshuffleParts();
 	}
 	
-	[RPC]
+	
 	void RequestshuffleParts(){
 		gameBoard.ShuffleParts();
 		SendChatMessage("embaralharemos as pecas! preparem-se!");
 		
 	}
-
+	
 
 
     void OnGUI()

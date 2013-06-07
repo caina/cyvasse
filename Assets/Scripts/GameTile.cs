@@ -24,18 +24,11 @@ public class GameTile : Photon.MonoBehaviour{
 		iTween.ColorTo(gameObject,currentColor,.4f);
 	}
 	
-	[RPC]
-	void moveBall(){
-		//this.gameObject
-		//Debug.Log("ok");
-		gameBoard.SetTarget(this.gameObject);
-	}
-	
 	void Activate(){
 		isActive=true;
 		
-		photonView.RPC("moveBall",PhotonTargets.All);
-		
+		//photonView.RPC("moveBall",PhotonTargets.All);
+		gameBoard.SetTarget(this.gameObject);
 		renderer.material.color=Color.red;
 	//	photonView.RPC("MoveBall", PhotonTargets.All,gameObject);
 		//gameBoard.SetTarget(gameObject);
