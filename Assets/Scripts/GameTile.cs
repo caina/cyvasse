@@ -1,9 +1,8 @@
 using UnityEngine;
 using System.Collections;
 
-public class GameTile : Photon.MonoBehaviour{
+public class GameTile : MonoBehaviour{
 	
-	private PhotonView myPhotonView;
 	private Color currentColor;
 	private Vector3 currentPosition;
 	public Board gameBoard;
@@ -12,7 +11,6 @@ public class GameTile : Photon.MonoBehaviour{
 	void Start(){
 		currentColor=renderer.material.color;
 		currentPosition=transform.position;
-		//myPhotonView = Camera.main.GetComponent<PhotonView>();
 	}
 	
 	void SetGameboard(Board gameBoard){
@@ -49,6 +47,8 @@ public class GameTile : Photon.MonoBehaviour{
 		}
 	}
 	
+
+	
 	void OnMouseExit(){
 		if(!isActive){
 			iTween.ColorTo(gameObject,currentColor,.4f);
@@ -57,9 +57,23 @@ public class GameTile : Photon.MonoBehaviour{
 	}
 	
 	void OnMouseDown(){
-		if(gameBoard.ballSet){
-			Activate();
+		if(gameBoard.hasPieceSelected()){
+			//mover peca selecionada
+			if(gameBoard.ballSet){
+				Activate();
+			}
+		}else{
+			this.GetComponent<BoxCollider>().enabled = true;	
 		}
 	}
+	
+	
+	
+	void OnCollisionStay(Collision collisionInfo) {
+		if(collisionInfo.gameObject.tag=="BoardPiece"){
+			Debug.Log("Colidi com");
+			
+		}  
+    }
 }
 

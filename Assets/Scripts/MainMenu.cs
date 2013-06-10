@@ -1,44 +1,51 @@
 using UnityEngine;
 using System.Collections;
 
-public class MainMenu : MonoBehaviour
-{
-
+public class MainMenu : MonoBehaviour{
+	
+	private string roomName = "myRoom";
+    private Vector2 scrollPos = Vector2.zero;
+	private bool isOffline = false;
+	private bool isLocal = false;
+	private string ip = "localhost";
+	private int porta = 25000;
+	public GameManager gameManager;
+	
     void Awake()
     {
-        //PhotonNetwork.logLevel = NetworkLogLevel.Full;
-
-        //Connect to the main photon server. This is the only IP and port we ever need to set(!)
+		gameManager = (GameManager) this.GetComponent<GameManager>();
+		
         if (!PhotonNetwork.connected)
             PhotonNetwork.ConnectUsingSettings("v1.0"); // version of the game/demo. used to separate older clients from newer ones (e.g. if incompatible)
 
-        //Load name from PlayerPrefs
         PhotonNetwork.playerName = PlayerPrefs.GetString("playerName", "Guest" + Random.Range(1, 9999));
 
         //Set camera clipping for nicer "main menu" background
 		//Camera.main.transform.rotation = 10;
         Camera.main.farClipPlane = Camera.main.nearClipPlane + 0.1f;
 
-    }
+	}
 
-    private string roomName = "myRoom";
-    private Vector2 scrollPos = Vector2.zero;
-
-    void OnGUI()
-    {
-        if (!PhotonNetwork.connected)
+    void OnGUI(){
+		
+		if(isLocal)
+			return;//chega dessa putaria da feevale bloquear o photon
+		
+		if (!PhotonNetwork.connected && !isOffline)
         {
             ShowConnectingGUI();
-            return;   //Wait for a connection
-        }
+            return;//Wait for a connection
+        }else if(isOffline){
+			showOfflineGUI();	
+			return;
+		}	
 
 
-        if (PhotonNetwork.room != null)
+        if ((PhotonNetwork.room != null))
             return; //Only when we're not in a Room
 
 
         GUILayout.BeginArea(new Rect((Screen.width - 400) / 2, (Screen.height - 300) / 2, 400, 300));
-
         GUILayout.Label("Encontre ou crie uma sala");
 
         //Player name
@@ -113,14 +120,45 @@ public class MainMenu : MonoBehaviour
 
         GUILayout.EndArea();
     }
+	
+	void OnFailedToConnectToPhoton(DisconnectCause cause) {
+		this.GetComponent<Chat>().enabled = false;
+        isOffline = true;	
+	}
+	
+	void showOfflineGUI(){
+		//Debug.Log(isLocal);
+		if(Network.peerType == NetworkPeerType.Disconnected){
+			GUILayout.BeginArea(new Rect((Screen.width - 400) / 2, (Screen.height - 300) / 2, 400, 300));
+		        GUILayout.Label("Nao e possivel contatar o servidor Photon, conecte por LAN");
+					GUILayout.BeginHorizontal();
+				        GUILayout.Label("IP:", GUILayout.Width(50));
+				        ip = GUILayout.TextField(ip);
+						porta = int.Parse(GUILayout.TextField(porta.ToString()));
+						if (GUILayout.Button("Entrar")){
+							Network.Connect(ip,porta);
+		                }
+						if(GUILayout.Button ("Criar Servidor")){
+							Network.InitializeServer(25,porta, false);
+						}
+		        GUILayout.EndHorizontal();
+	        GUILayout.EndArea();	
+		}else{
+			Debug.Log("Connected to server");
+			isLocal = true;
+			isOffline = false;
+			gameManager.isLocal = isLocal;
+			gameManager.StartGame();
+		}
+	}
 
 
-    void ShowConnectingGUI()
-    {
+    void ShowConnectingGUI(){
         GUILayout.BeginArea(new Rect((Screen.width - 400) / 2, (Screen.height - 300) / 2, 400, 300));
 
-        GUILayout.Label("Connectando com o servidor.");
-        //GUILayout.Label("Hint: This demo uses a settings file and logs the server address to the console.");
+        GUILayout.Label("Connectando com o Photon.");
+        GUILayout.Label("Se falhar ao conectar, conecte usando a LAN.");
+		
 
         GUILayout.EndArea();
     }

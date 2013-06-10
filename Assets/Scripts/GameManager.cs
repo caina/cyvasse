@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class GameManager : Photon.MonoBehaviour {
+public class GameManager : MonoBehaviour {
 
     // this is a object name (must be in any Resources folder) of the prefab to spawn as player avatar.
     // read the documentation for info how to spawn dynamically loaded game objects at runtime (not using Resources folders)
@@ -11,6 +11,12 @@ public class GameManager : Photon.MonoBehaviour {
 	public Board gameBoard;
 	public int playerRound = 0;
 	public int playerTime;
+	public bool isLocal = false;
+	private PhotonView photonView;
+	
+	void Start(){
+		photonView = (PhotonView) this.GetComponent<PhotonView>();	
+	}
 	
     void OnJoinedRoom()
     {
@@ -20,8 +26,11 @@ public class GameManager : Photon.MonoBehaviour {
     }
 	
 	void SendChatMessage(string message){
-		chat.chatInput = message;
-		chat.SendChat(PhotonTargets.All);
+		if(PhotonNetwork.connected){
+			chat.chatInput = message;
+			chat.SendChat(PhotonTargets.All);	
+		}
+		
 	}
 	
 	/***
@@ -55,23 +64,13 @@ public class GameManager : Photon.MonoBehaviour {
 
     }
 	
-    void StartGame()
-    {
-        
+    public void StartGame(){
 		Camera.main.farClipPlane = 1000; //Main menu set this to 0.4 for a nicer BG    
-		
-		photonView.RPC("PlayerConnected", PhotonTargets.All);
-		
-        //prepare instantiation data for the viking: Randomly diable the axe and/or shield
-        /*bool[] enabledRenderers = new bool[2];
-        enabledRenderers[0] = Random.Range(0,2)==0;//Axe
-        enabledRenderers[1] = Random.Range(0, 2) == 0; ;//Shield
-        
-        object[] objs = new object[1]; // Put our bool data in an object array, to send
-        objs[0] = enabledRenderers;
-
-        // Spawn our local player
-        PhotonNetwork.Instantiate(this.playerPrefabName, transform.position, Quaternion.identity, 0, objs);*/
+		if(PhotonNetwork.connected){
+			photonView.RPC("PlayerConnected", PhotonTargets.All);
+		}else{
+			networkView.RPC("PlayerConnected",RPCMode.All);
+		}
 		
     }
 	
@@ -125,7 +124,7 @@ public class GameManager : Photon.MonoBehaviour {
     }
     void OnFailedToConnectToPhoton()
     {
-        Debug.LogWarning("OnFailedToConnectToPhoton");
+       // Debug.LogWarning("OnFailedToConnectToPhoton");
     }
   
 }

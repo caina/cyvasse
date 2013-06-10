@@ -10,6 +10,7 @@ public class Board : Photon.MonoBehaviour
 	public GameObject[,] gameTiles = new GameObject[10,10];
 	public GameObject[] gamePieces = new GameObject[11];
 	public GameManager gameManager;
+	public GameObject selectedPiece = null;
 	
 	void Start ()
 	{	
@@ -91,7 +92,12 @@ public class Board : Photon.MonoBehaviour
 	
 	
 	public void ShuffleParts(){
-		ball = (GameObject) PhotonNetwork.Instantiate("GameBall",new Vector3(0,.5f,0),Quaternion.identity,0);
+		if(PhotonNetwork.connected){
+			ball = (GameObject) PhotonNetwork.Instantiate("GameBall",new Vector3(0,.5f,0),Quaternion.identity,0);
+		}else{
+			ball = (GameObject)  Network.Instantiate((GameObject)Resources.Load("GameBall"), new Vector3(0,.5f,0),Quaternion.identity,0);
+		}
+		
 		for(int i=0; i<11; i++){
 			
 			
@@ -113,5 +119,10 @@ public class Board : Photon.MonoBehaviour
 		}
 		
 	}
+	
+	public bool hasPieceSelected(){
+		return selectedPiece!=null;
+	}
+	
 }
 
