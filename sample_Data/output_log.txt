@@ -16,60 +16,50 @@ Platform assembly: C:\Unity_workspace\cyvasse\sample_Data\Managed\Assembly-CShar
 Loading C:\Unity_workspace\cyvasse\sample_Data\Managed\Assembly-CSharp-firstpass.dll into Unity Child Domain
 Platform assembly: C:\Unity_workspace\cyvasse\sample_Data\Managed\Assembly-CSharp.dll (this message is harmless)
 Loading C:\Unity_workspace\cyvasse\sample_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: C:\Unity_workspace\cyvasse\sample_Data\Managed\Assembly-UnityScript-firstpass.dll (this message is harmless)
+Loading C:\Unity_workspace\cyvasse\sample_Data\Managed\Assembly-UnityScript-firstpass.dll into Unity Child Domain
 Platform assembly: C:\Unity_workspace\cyvasse\sample_Data\Managed\Photon3Unity3D.dll (this message is harmless)
 Loading C:\Unity_workspace\cyvasse\sample_Data\Managed\Photon3Unity3D.dll into Unity Child Domain
-- Completed reload, in  0.050 seconds
+- Completed reload, in  0.049 seconds
 Platform assembly: C:\Unity_workspace\cyvasse\sample_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: C:\Unity_workspace\cyvasse\sample_Data\Managed\System.dll (this message is harmless)
-Illegal view ID:0 method: moveBall GO:Block: 6,1
+TimeoutDisconnect while connecting to: app-jp.exitgamesclouds.com:5055. Check if the server is available.
  
 (Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
 
-Had to lookup view that wasn't in dict: View (0)0 on Block: 8,8 (scene)
+OnDisconnectedFromPhoton
  
 (Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
 
-Illegal view ID:0 method: moveBall GO:Block: 2,4
+Connected to server
  
 (Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
 
-Had to lookup view that wasn't in dict: View (0)0 on Block: 8,8 (scene)
+4
  
 (Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
 
-Illegal view ID:0 method: moveBall GO:Block: 2,2
+4
  
 (Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
 
-Had to lookup view that wasn't in dict: View (0)0 on Block: 8,8 (scene)
+3
  
 (Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
 
-Illegal view ID:0 method: moveBall GO:Block: 3,3
+12
  
 (Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
 
-Had to lookup view that wasn't in dict: View (0)0 on Block: 8,8 (scene)
+12
  
 (Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
 
-Illegal view ID:0 method: moveBall GO:Block: 3,1
+2
  
 (Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
 
-Had to lookup view that wasn't in dict: View (0)0 on Block: 8,8 (scene)
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-Illegal view ID:0 method: moveBall GO:Block: 2,1
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-Had to lookup view that wasn't in dict: View (0)0 on Block: 8,8 (scene)
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-Had to lookup view that wasn't in dict: View (0)0 on Block: 8,8 (scene)
+4
  
 (Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
 

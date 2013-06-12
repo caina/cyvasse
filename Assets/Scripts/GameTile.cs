@@ -7,6 +7,7 @@ public class GameTile : MonoBehaviour{
 	private Vector3 currentPosition;
 	public Board gameBoard;
 	bool isActive;
+	public GameObject onMePiece = null;
 	
 	void Start(){
 		currentColor=renderer.material.color;
@@ -57,23 +58,28 @@ public class GameTile : MonoBehaviour{
 	}
 	
 	void OnMouseDown(){
+		
 		if(gameBoard.hasPieceSelected()){
 			//mover peca selecionada
 			if(gameBoard.ballSet){
 				Activate();
 			}
-		}else{
-			this.GetComponent<BoxCollider>().enabled = true;	
 		}
 	}
 	
 	
 	
-	void OnCollisionStay(Collision collisionInfo) {
-		if(collisionInfo.gameObject.tag=="BoardPiece"){
-			Debug.Log("Colidi com");
-			
+	void OnTriggerEnter(Collider collision) {
+		Debug.Log("colidi");
+		if(collision.gameObject.tag=="BoardPiece"){
+			this.onMePiece = collision.gameObject;	
 		}  
+    }
+	
+	void OnTriggerExit(Collider other) {
+       if(other.gameObject.tag=="BoardPiece"){
+			this.onMePiece = null;
+		}
     }
 }
 

@@ -1,16 +1,15 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\GameTile.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Board.cs">
     <Files>
-      <File FileName="Assets\Scripts\GameTile.cs" Line="75" Column="4" />
-      <File FileName="Assets\Scripts\Board.cs" Line="9" Column="21" />
-      <File FileName="Assets\Scripts\GameManager.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\GamePiece.cs" Line="22" Column="56" />
+      <File FileName="Assets\Scripts\GameTile.cs" Line="30" Column="13" />
+      <File FileName="Assets\Scripts\Board.cs" Line="61" Column="2" />
+      <File FileName="Assets\Scripts\GameManager.cs" Line="99" Column="5" />
       <File FileName="Assets\Scripts\Chat.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\MainMenu.cs" Line="1" Column="1" />
-      <File FileName="Assets\Photon Unity Networking\UtilityScripts\ServerTime.cs" Line="1" Column="1" />
-      <File FileName="Assets\Photon Unity Networking\Plugins\PhotonNetwork\ServerSettings.cs" Line="1" Column="1" />
-      <File FileName="Assets\Photon Unity Networking\Editor\PhotonNetwork\ServerSettingsInspector.cs" Line="1" Column="1" />
-      <File FileName="Assets\Photon Unity Networking\Plugins\PhotonNetwork\PhotonHandler.cs" Line="162" Column="39" />
+      <File FileName="..\itween\GridMovement - Copia\Assets\Scripts\GameBoardCSharp.cs" Line="14" Column="33" />
+      <File FileName="Assets\Plugins\iTween.cs" Line="6498" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

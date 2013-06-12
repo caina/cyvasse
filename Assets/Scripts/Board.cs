@@ -1,41 +1,61 @@
 using UnityEngine;
 using System.Collections;
 
-public class Board : Photon.MonoBehaviour
+public class Board : MonoBehaviour
 {	
 	GameObject currentTarget=null;
-	public GameObject ball;
+	public GameObject ball;	
 	public int rate = 10;
 	public bool ballSet = true;
 	public GameObject[,] gameTiles = new GameObject[10,10];
-	public GameObject[] gamePieces = new GameObject[11];
+	public GameObject[] gamePieces = new GameObject[45];
 	public GameManager gameManager;
-	public GameObject selectedPiece = null;
+	public int selectedPiece;
+	private PhotonView photonView;
 	
 	void Start ()
 	{	
 		CreateGameBoard(10,10);
-		
+		photonView = (PhotonView) this.GetComponent<PhotonView>();
+		ShuffleParts();
 	}
 	
+	/*
 	public void SetTarget(GameObject target){
 		if(currentTarget != null && target!=currentTarget){
 			currentTarget.SendMessage("Deactivate");
 		}
 		currentTarget=target;
 		ballSet=false;
-		Vector3 position = target.transform.position;
+		ball = getSelectedPiece();
+			}
+	**/
+	public void SetTarget(GameObject target){
+		if(currentTarget != null && target!=currentTarget){
+			currentTarget.SendMessage("Deactivate");
+		}
 		
-		photonView.RPC("movePiece", PhotonTargets.All,position);
+		if(!hasPieceSelected()){
+			return;	
+		}
+		
+		
+		currentTarget=target;
+		ballSet=false;
+		Vector3 position = target.transform.position;
+		if(PhotonNetwork.connected){
+			photonView.RPC("movePiece", PhotonTargets.All,currentTarget.transform.position);
+		}else{
+			networkView.RPC("movePiece",RPCMode.All,currentTarget.transform.position);	
+		}
 	}
 	
 	[RPC]
 	public void movePiece(Vector3 targetPosition){
-		Debug.Log(targetPosition.x);
-		float travelTime = Vector3.Distance(targetPosition, targetPosition)/rate;
-		iTween.MoveBy(ball,iTween.Hash("x",targetPosition.x-targetPosition.x,"easetype","easeinoutsine","time",travelTime));
-		iTween.MoveBy(ball,iTween.Hash("z",targetPosition.z-targetPosition.z,"time",travelTime,"delay",travelTime,"easetype","easeinoutsine","oncomplete","Reset","oncompletetarget",gameObject));
-		
+		ball = getSelectedPiece();
+		float travelTime = Vector3.Distance(ball.transform.position, targetPosition)/rate;
+		iTween.MoveBy(ball,iTween.Hash("x",targetPosition.x-ball.transform.position.x,"easetype","easeinoutsine","time",travelTime));
+		iTween.MoveBy(ball,iTween.Hash("z",targetPosition.z-ball.transform.position.z,"time",travelTime,"delay",travelTime,"easetype","easeinoutsine","oncomplete","Reset","oncompletetarget",gameObject));
 	}
 	
 	
@@ -92,15 +112,43 @@ public class Board : Photon.MonoBehaviour
 	
 	
 	public void ShuffleParts(){
-		if(PhotonNetwork.connected){
-			ball = (GameObject) PhotonNetwork.Instantiate("GameBall",new Vector3(0,.5f,0),Quaternion.identity,0);
-		}else{
-			ball = (GameObject)  Network.Instantiate((GameObject)Resources.Load("GameBall"), new Vector3(0,.5f,0),Quaternion.identity,0);
-		}
-		
-		for(int i=0; i<11; i++){
+		int lastZ=-5;
+		int lastX=-5;
+		int last_direction=-1;
+		Vector3 ballPosition;
+		for(int i=0; i<20; i++){
+			GameObject ball = null;
+			//linha, altura, colunas
+			//5 / 1 = player 2
+			//-5 / -1 = Player 1
+			//z = colunas
+			// x = linhas (-5 a 4)
+			if(i<20){
+				//p1	
+				
+				ballPosition = new Vector3(lastX,.5f,lastZ);
+				if(last_direction<0){
+					lastZ++;
+					if(lastZ==-1)
+						last_direction = 1;
+				}else{
+					lastZ--;
+					if(lastZ==-5)
+						last_direction = -1;
+				}
+			}else{
+				//p2
+				
+				ballPosition = new Vector3(lastX,.5f,lastZ);
+				
+			}
+			
+			ball = (GameObject)Instantiate((GameObject)Resources.Load("GameBall"), ballPosition,Quaternion.identity);
 			
 			
+			ball.name= i.ToString();
+			ball.SendMessage("SetGameboard",this);
+			gamePieces[i] = ball;
 			/*
 			GameObject gamePiece = (GameObject)Instantiate(block,new Vector3(i,0,j),Quaternion.identity);
 			gamePiece.name="Block: " + i + "," + j;
@@ -120,9 +168,23 @@ public class Board : Photon.MonoBehaviour
 		
 	}
 	
+	public GameObject getSelectedPiece(){
+		return gamePieces[selectedPiece];	
+	}
 	public bool hasPieceSelected(){
 		return selectedPiece!=null;
 	}
+	public void selectPiece(int piece){
+		if(PhotonNetwork.connected){
+			photonView.RPC("_selectPiece", PhotonTargets.All,piece);
+		}else{
+			networkView.RPC("_selectPiece",RPCMode.All,piece);	
+		}	
+	}
 	
+	[RPC]
+	void _selectPiece(int piece){
+		this.selectedPiece = piece;	
+	}
 }
 

@@ -91,12 +91,12 @@ public class GameManager : MonoBehaviour {
 			RequestshuffleParts();
 		
 		}
-		RequestshuffleParts();
+		//RequestshuffleParts();
 	}
 	
 	
 	void RequestshuffleParts(){
-		gameBoard.ShuffleParts();
+		//gameBoard.ShuffleParts();
 		SendChatMessage("embaralharemos as pecas! preparem-se!");
 		
 	}
