@@ -60,7 +60,7 @@
      <None Include="Assets\DemoVikings\Demo\READ ME FIRST.txt" />
      <None Include="Assets\Photon Unity Networking\Plugins\PhotonNetwork\library\Photon3Unity3D.xml" />
      <None Include="Assets\DemoVikings\Demo\Shaders\NewShader.shader" />
-     <None Include="Assets\Plugins\Standard Assets\Particles\Sources\Shaders\Particle Alpha Blend (Queue +100).shader" />
+     <None Include="Assets\Plugins\Cartoon FX\Shaders\CFX2 Particle Alpha Blend Tint.shader" />
      <None Include="Assets\Photon Unity Networking\readme.txt" />
  <Reference Include="Newtonsoft.Json">
  <HintPath>Assets\Photon Unity Networking\Editor\PhotonNetwork\Newtonsoft.Json.dll</HintPath>
@@ -72,8 +72,6 @@
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
       <Project>{5B54D547-EBD0-7182-D6AC-1115703CD977}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
-    <ProjectReference Include="Assembly-UnityScript-firstpass.unityproj">
-      <Project>{2C99A8F4-F1DA-6683-4EA3-ACFF08070263}</Project>      <Name>Assembly-UnityScript-firstpass</Name>    </ProjectReference>
     <ProjectReference Include="Assembly-CSharp.csproj">
       <Project>{2B923084-1B63-E678-DD00-596D9AACB6D1}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
   </ItemGroup>

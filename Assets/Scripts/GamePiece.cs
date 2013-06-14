@@ -4,7 +4,14 @@ using System.Collections;
 public class GamePiece : MonoBehaviour {
 	
 	public Board gameBoard;
-	public int piecesMaxMoves=1;
+	public enum types {piece = 1, tile = 2};
+	public int pieceMaxMoves=1;
+	public int id;
+	public int onMeX;
+	public int onMeZ;
+	public int myType;
+	public int playerBelong;
+	public int maxRangeAtack;
 	
 	// Use this for initialization
 	void Start () {
@@ -18,8 +25,8 @@ public class GamePiece : MonoBehaviour {
 	
 	void OnMouseDown(){
 		//verificar se a peca eh minha
-		Debug.Log(this.gameObject.name);
-		gameBoard.selectPiece(int.Parse(this.gameObject.name));
+		
+		gameBoard.selectPiece(this.gameObject);
 	}
 	
 	void SetGameboard(Board gameBoard){

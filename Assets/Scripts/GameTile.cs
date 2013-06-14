@@ -8,6 +8,10 @@ public class GameTile : MonoBehaviour{
 	public Board gameBoard;
 	bool isActive;
 	public GameObject onMePiece = null;
+	//posicao na matri
+	public int x;
+	public int z;
+	public int onMeId = 99999;
 	
 	void Start(){
 		currentColor=renderer.material.color;

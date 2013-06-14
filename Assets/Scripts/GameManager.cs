@@ -79,6 +79,7 @@ public class GameManager : MonoBehaviour {
 		if(isFirstPlayer){
 			isFirstPlayer = false;
 			playerTime = 0;
+			gameBoard.playerNumber = 1;
 		}else{
 		/*
 			Camera.main.transform.position = new Vector3(0f,6.84f,-5.7f);
@@ -86,7 +87,7 @@ public class GameManager : MonoBehaviour {
 			Camera.main.transform.rotation = Quaternion.Euler(53.65f,rot.x,rot.y);	
 			
 			*/
-		
+			gameBoard.playerNumber = 2;
 			playerTime = 1;
 			RequestshuffleParts();
 		
