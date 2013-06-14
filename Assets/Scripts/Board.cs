@@ -12,7 +12,7 @@ public class Board : MonoBehaviour
 	public int rate = 10;
 	public bool ballSet = true;
 	public GameObject[,] gameTiles = new GameObject[10,10];
-	public GameObject[] gamePieces = new GameObject[45];
+	public GameObject[] gamePieces = new GameObject[100];
 	public GameManager gameManager;
 	public int selectedPiece;
 	private PhotonView photonView;
@@ -145,40 +145,41 @@ public class Board : MonoBehaviour
 		Vector3 ballPosition;
 		int currentPlayerTime = 1;
 		int createdObjects = 1;
-		for (int i = 0; i < 10; i++) {
-			for (int j = 0; j < 10; j++) {
-				
-				
-				
-				if(createdObjects < 22){
-					if(createdObjects>11)
+		for (int i = 0; i < 5; i++) {
+			for (int j = 0; j < 9; j++) {
+
+				if(createdObjects < 11 && currentPlayerTime == 1){
+					if(createdObjects==10)
 						currentPlayerTime = 2;
+					
 					GameObject ball = null;
-					//linha, altura, colunas
-					//5 / 1 = player 2
-					//-5 / -1 = Player 1
-					//z = colunas
-					// x = linhas (-5 a 4)
-					/*
-					if(createdObjects<10){
-						//p1	
-						
-						ballPosition = new Vector3(i,.5f,j);
-						if(last_direction<0){
-							lastZ++;
-							if(lastZ==-1)
-								last_direction = 1;
-						}else{
-							lastZ--;
-							if(lastZ==-5)
-								last_direction = -1;
-						}
-					}else{
-						//p2
-						
-						ballPosition = new Vector3(i,.5f,j);
-						
-					}*/
+					GameObject tile = gameTiles[i,j];
+					ballPosition = tile.transform.position;
+					tile.GetComponent<GameTile>().onMeId =createdObjects; 
+					ballPosition.y = .5f;
+					ball = (GameObject)Instantiate((GameObject)Resources.Load("GameBall"), ballPosition,Quaternion.identity);
+					
+					ball.GetComponent<GamePiece>().id = createdObjects;
+					ball.GetComponent<GamePiece>().onMeX = i;
+					ball.GetComponent<GamePiece>().onMeZ = j;
+					ball.GetComponent<GamePiece>().myType = 1;
+					ball.GetComponent<GamePiece>().maxRangeAtack = 1;
+					
+					ball.GetComponent<GamePiece>().playerBelong = currentPlayerTime;
+					ball.name= "Peca "+i.ToString() + " - "+ j.ToString();
+					ball.SendMessage("SetGameboard",this);
+					gamePieces[createdObjects] = ball;
+					createdObjects++;
+				}
+			}
+		}
+		
+		for (int i = 9; i > 5; i--) {
+			for (int j = 9; j > 0; j--) {
+
+				if(createdObjects < 21 && currentPlayerTime == 2){
+										
+					GameObject ball = null;
 					GameObject tile = gameTiles[i,j];
 					ballPosition = tile.transform.position;
 					tile.GetComponent<GameTile>().onMeId =createdObjects; 

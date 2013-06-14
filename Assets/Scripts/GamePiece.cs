@@ -12,6 +12,7 @@ public class GamePiece : MonoBehaviour {
 	public int myType;
 	public int playerBelong;
 	public int maxRangeAtack;
+	public int powerLevel;
 	
 	// Use this for initialization
 	void Start () {
