@@ -7,11 +7,15 @@ public class GameTile : MonoBehaviour{
 	private Vector3 currentPosition;
 	public Board gameBoard;
 	bool isActive;
+	
+	private string pieceType = "";
+	private GameObject fieldObject = null;
 	public GameObject onMePiece = null;
 	//posicao na matri
 	public int x;
 	public int z;
 	public int onMeId = 99999;
+	public bool isTileOption = false;
 	
 	void Start(){
 		currentColor=renderer.material.color;
@@ -39,7 +43,19 @@ public class GameTile : MonoBehaviour{
 		iTween.MoveTo(this.gameObject,currentPosition,.4f);
 	}
 	
+	public void isOption(){
+		isTileOption = true;
+	//	Debug.Log("me selecionou! "+x.ToString()+" - "+z.ToString());
+		iTween.MoveTo(gameObject, new Vector3(currentPosition.x,.5f,currentPosition.z),.2f);
+	}
 	
+	public void hideOptions(){
+		if(isTileOption){
+			isTileOption = false;
+			Debug.Log("to saindo");
+			iTween.MoveTo(gameObject,currentPosition,.4f);
+		}
+	}
 	
 	void OnMouseEnter(){
 		if(!isActive){
@@ -85,5 +101,21 @@ public class GameTile : MonoBehaviour{
 			this.onMePiece = null;
 		}
     }
+	
+	void changeType(string type){
+		if(pieceType.Equals("montain")){
+			//destruir montanha
+			if(fieldObject!=null){
+				Destroy(fieldObject);
+				fieldObject = null;
+			}
+		}
+		
+		//if montain, instantiate obj	
+		if(type.Equals("montain")){
+			
+		}
+	}
+	
 }
 

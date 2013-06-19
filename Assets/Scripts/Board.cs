@@ -4,6 +4,7 @@ using System.Collections;
 public class Board : MonoBehaviour
 {	
 	public GameObject pieceKillEffect;
+	
 	GameObject currentTarget=null;
 	private GameObject targetKill;
 	public GameObject ball;	
@@ -99,13 +100,13 @@ public class Board : MonoBehaviour
 				newBlock.GetComponent<GameTile>().x = i;
 				newBlock.GetComponent<GameTile>().z = j;
 				newBlock.SendMessage("SetGameboard",this);
-				Color blockColor;
+				
 				if((j+i)%2 == 0){
-					blockColor=Color.black;
+					newBlock.renderer.material.SetTexture("_MainTex",(Texture)Resources.Load("textures/light_grass"));	
 				}else{
-					blockColor=Color.white;
+					newBlock.renderer.material.SetTexture("_MainTex",(Texture)Resources.Load("textures/strong_grass"));	
 				}
-				newBlock.renderer.material.color=blockColor;
+			
 				newBlock.transform.parent=transform;
 				
 				gameTiles[i,j] = newBlock;
@@ -152,6 +153,8 @@ public class Board : MonoBehaviour
 					if(createdObjects==10)
 						currentPlayerTime = 2;
 					
+					
+					
 					GameObject ball = null;
 					GameObject tile = gameTiles[i,j];
 					ballPosition = tile.transform.position;
@@ -164,6 +167,12 @@ public class Board : MonoBehaviour
 					ball.GetComponent<GamePiece>().onMeZ = j;
 					ball.GetComponent<GamePiece>().myType = 1;
 					ball.GetComponent<GamePiece>().maxRangeAtack = 1;
+					
+					
+					if(createdObjects ==1){
+						ball.GetComponent<GamePiece>().pieceMaxMoves = 7;
+						ball.renderer.material.color=Color.black;
+					}
 					
 					ball.GetComponent<GamePiece>().playerBelong = currentPlayerTime;
 					ball.name= "Peca "+i.ToString() + " - "+ j.ToString();
@@ -214,7 +223,7 @@ public class Board : MonoBehaviour
 		int z = pieceGameObject.GetComponent<GamePiece>().onMeZ;
 		
 		//Debug.Log(pieceGameObject.GetComponent<GamePiece>().playerBelong);
-	
+		
 		
 		if(hasPieceSelected() && (pieceGameObject.GetComponent<GamePiece>().playerBelong != playerNumber)){
 			atackPiece(pieceGameObject);
@@ -240,6 +249,8 @@ public class Board : MonoBehaviour
 		this.selectedPiece = piece;	
 		getSelectedPiece().renderer.material.color=Color.yellow;
 	}
+	
+	
 	
 	GameObject me;
 	void atackPiece(GameObject target){
@@ -303,11 +314,15 @@ public class Board : MonoBehaviour
 	void _atackRpc(int pieceId){
 		targetKill = (GameObject) gamePieces[pieceId];
 		Vector3 positionExplode = targetKill.gameObject.transform.position;
-		getTileByPiece(targetKill).GetComponent<GameTile>().onMeId = 99999;
+		GameObject killedTile = getTileByPiece(targetKill);
+		killedTile.GetComponent<GameTile>().onMeId = 99999;
+				
 		Destroy(targetKill.gameObject);
 		
 		gamePieces[pieceId] = null;
 		Instantiate(pieceKillEffect, positionExplode,Quaternion.identity);
+		
+		SetTarget(killedTile);
 	}
 	
 	public bool canPerformMove(GameObject myTile, GameObject targetTile, int movesCanPerform){
@@ -360,9 +375,64 @@ public class Board : MonoBehaviour
 		return false;
 	}
 	
-	GameObject getTileByPiece(GameObject piece){
-		return (GameObject) gameTiles[piece.GetComponent<GamePiece>().onMeX, piece.GetComponent<GamePiece>().onMeZ];	
+	public void hideMovementOptions(){
+		for (int i = 0; i < 10; i++) {
+			for (int j = 0; j < 10; j++) {
+				gameTiles[i,j].GetComponent<GameTile>().hideOptions();
+			}
+		}
 	}
+	public void showMovementOptions(GameObject selectedPiece){
+		Debug.Log("slecionei");
+		GameObject tile = getTileByPiece(selectedPiece);
+		if(tile==null)
+			return;
+		
+		int x = tile.GetComponent<GameTile>().x;
+		int z = tile.GetComponent<GameTile>().z;
+		int movements = selectedPiece.GetComponent<GamePiece>().pieceMaxMoves;
+		
+		int xDir = x;
+		int xEsq = x;
+		int zDir = z;
+		int zEsq = z;
+		while(movements > 0){
+			//direita
+			
+			xDir ++;
+			xEsq --;
+			zDir ++;
+			zEsq --;
+			
+			try{
+				((GameObject) gameTiles[xDir,z]).GetComponent<GameTile>().isOption();	
+			}catch{}
+			try{
+				((GameObject) gameTiles[xEsq,z]).GetComponent<GameTile>().isOption();	
+			}catch{}
+			try{
+				((GameObject) gameTiles[x,zDir]).GetComponent<GameTile>().isOption();	
+			}catch{}
+			try{
+				((GameObject) gameTiles[x,zEsq]).GetComponent<GameTile>().isOption();
+			}catch{}
+				
+						
+			movements--;	
+		}
+		
+	}
+	
+	
+	GameObject getTileByPiece(GameObject piece){
+		try{
+			return (GameObject) gameTiles[piece.GetComponent<GamePiece>().onMeX, piece.GetComponent<GamePiece>().onMeZ];		
+		}catch{
+			return null;
+		}
+		
+	}
+	
 	
 	
 }

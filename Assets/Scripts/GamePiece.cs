@@ -33,4 +33,11 @@ public class GamePiece : MonoBehaviour {
 	void SetGameboard(Board gameBoard){
 		this.gameBoard=gameBoard;
 	}
+	
+	void OnMouseOver() {
+        gameBoard.showMovementOptions(gameObject);
+    }
+	void OnMouseExit(){
+		gameBoard.hideMovementOptions();
+	}
 }
