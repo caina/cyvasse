@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour {
 	public int playerTime;
 	public bool isLocal = false;
 	private PhotonView photonView;
+	private bool onMountPhase = true;
 	
 	void Start(){
 		photonView = (PhotonView) this.GetComponent<PhotonView>();	
@@ -101,8 +102,6 @@ public class GameManager : MonoBehaviour {
 		SendChatMessage("embaralharemos as pecas! preparem-se!");
 		
 	}
-	
-
 
     void OnGUI()
     {
@@ -127,5 +126,9 @@ public class GameManager : MonoBehaviour {
     {
        // Debug.LogWarning("OnFailedToConnectToPhoton");
     }
+	
+	public bool isOnMountPhase(){
+		return onMountPhase;
+	}
   
 }

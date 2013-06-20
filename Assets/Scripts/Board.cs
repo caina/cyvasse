@@ -11,6 +11,7 @@ public class Board : MonoBehaviour
 	public GameObject tile;
 	public GameObject myTile;
 	public int rate = 10;
+	private int numberPlayersPieces = 11;
 	public bool ballSet = true;
 	public GameObject[,] gameTiles = new GameObject[10,10];
 	public GameObject[] gamePieces = new GameObject[100];
@@ -18,6 +19,9 @@ public class Board : MonoBehaviour
 	public int selectedPiece;
 	private PhotonView photonView;
 	public int playerNumber;
+	private int createdGrounds = 0;
+	
+	public GameObject groundOfSelected = null;
 	
 	void Start ()
 	{	
@@ -43,6 +47,10 @@ public class Board : MonoBehaviour
 		
 		if(!hasPieceSelected()){
 			return;	
+		}
+		
+		if(target.GetComponent<GameTile>().isFrozen()){
+			return;
 		}
 		
 		int x = target.GetComponent<GameTile>().x;
@@ -101,10 +109,15 @@ public class Board : MonoBehaviour
 				newBlock.GetComponent<GameTile>().z = j;
 				newBlock.SendMessage("SetGameboard",this);
 				
+				Texture texture;
 				if((j+i)%2 == 0){
-					newBlock.renderer.material.SetTexture("_MainTex",(Texture)Resources.Load("textures/light_grass"));	
+					texture = (Texture)Resources.Load("textures/light_grass");
+					newBlock.renderer.material.SetTexture("_MainTex",texture);	
+					newBlock.GetComponent<GameTile>().defaultTexture = texture; 
 				}else{
-					newBlock.renderer.material.SetTexture("_MainTex",(Texture)Resources.Load("textures/strong_grass"));	
+					texture = (Texture)Resources.Load("textures/strong_grass");
+					newBlock.renderer.material.SetTexture("_MainTex",texture);
+					newBlock.GetComponent<GameTile>().defaultTexture = texture; 
 				}
 			
 				newBlock.transform.parent=transform;
@@ -146,47 +159,56 @@ public class Board : MonoBehaviour
 		Vector3 ballPosition;
 		int currentPlayerTime = 1;
 		int createdObjects = 1;
+		
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 9; j++) {
 
-				if(createdObjects < 11 && currentPlayerTime == 1){
+				if(createdObjects < numberPlayersPieces && currentPlayerTime == 1){
 					if(createdObjects==10)
 						currentPlayerTime = 2;
 					
 					
 					
-					GameObject ball = null;
-					GameObject tile = gameTiles[i,j];
-					ballPosition = tile.transform.position;
-					tile.GetComponent<GameTile>().onMeId =createdObjects; 
-					ballPosition.y = .5f;
-					ball = (GameObject)Instantiate((GameObject)Resources.Load("GameBall"), ballPosition,Quaternion.identity);
-					
-					ball.GetComponent<GamePiece>().id = createdObjects;
-					ball.GetComponent<GamePiece>().onMeX = i;
-					ball.GetComponent<GamePiece>().onMeZ = j;
-					ball.GetComponent<GamePiece>().myType = 1;
-					ball.GetComponent<GamePiece>().maxRangeAtack = 1;
-					
-					
-					if(createdObjects ==1){
-						ball.GetComponent<GamePiece>().pieceMaxMoves = 7;
-						ball.renderer.material.color=Color.black;
-					}
-					
-					ball.GetComponent<GamePiece>().playerBelong = currentPlayerTime;
-					ball.name= "Peca "+i.ToString() + " - "+ j.ToString();
-					ball.SendMessage("SetGameboard",this);
-					gamePieces[createdObjects] = ball;
-					createdObjects++;
+						GameObject ball = null;
+						GameObject tile = gameTiles[i,j];
+						ballPosition = tile.transform.position;
+						tile.GetComponent<GameTile>().onMeId =createdObjects; 
+						ballPosition.y = .5f;
+						ball = (GameObject)Instantiate((GameObject)Resources.Load("GameBall"), ballPosition,Quaternion.identity);
+						
+						ball.GetComponent<GamePiece>().id = createdObjects;
+						ball.GetComponent<GamePiece>().onMeX = i;
+						ball.GetComponent<GamePiece>().onMeZ = j;
+						ball.GetComponent<GamePiece>().myType = 1;
+						ball.GetComponent<GamePiece>().maxRangeAtack = 1;
+						
+						
+						if(createdObjects ==1){
+							ball.GetComponent<GamePiece>().pieceMaxMoves = 7;
+							ball.renderer.material.color=Color.black;
+						}
+						
+						ball.GetComponent<GamePiece>().playerBelong = currentPlayerTime;
+						ball.name= "Peca "+i.ToString() + " - "+ j.ToString();
+						ball.SendMessage("SetGameboard",this);
+						gamePieces[createdObjects] = ball;
+						createdObjects++;
+				}else{
+				
+					//after create all this pieces, is time to create the ground
+					createGround(i,j);
+				
 				}
+				
+				
+				
 			}
 		}
-		
+		createdGrounds = 0;
 		for (int i = 9; i > 5; i--) {
 			for (int j = 9; j > 0; j--) {
 
-				if(createdObjects < 21 && currentPlayerTime == 2){
+				if(createdObjects < (numberPlayersPieces+numberPlayersPieces) && currentPlayerTime == 2){
 										
 					GameObject ball = null;
 					GameObject tile = gameTiles[i,j];
@@ -206,9 +228,32 @@ public class Board : MonoBehaviour
 					ball.SendMessage("SetGameboard",this);
 					gamePieces[createdObjects] = ball;
 					createdObjects++;
+				}else{
+				
+					//after create all this pieces, is time to create the ground
+					createGround(i,j);
+					
 				}
 			}
 		}
+		
+	}
+	
+	void createGround(int x, int z){
+		Debug.Log(createdGrounds);
+		
+		if(createdGrounds <= 5  ){
+			//montanhas
+			((GameObject)gameTiles[x,z]).GetComponent<GameTile>().changeType("montain");
+			createdGrounds++;
+		}else if(createdGrounds > 5 && createdGrounds < 8){
+			((GameObject)gameTiles[x,z]).GetComponent<GameTile>().changeType("water");
+			createdGrounds++;
+		}else if(createdGrounds >= 8 && createdGrounds < 11){
+			((GameObject)gameTiles[x,z]).GetComponent<GameTile>().changeType("forest");
+			createdGrounds++;
+		}
+		
 		
 	}
 	
@@ -433,7 +478,29 @@ public class Board : MonoBehaviour
 		
 	}
 	
+	public void rpcChangeGrounds(int toX,int toZ){
+		int fromX = groundOfSelected.GetComponent<GameTile>().x;
+		int fromZ = groundOfSelected.GetComponent<GameTile>().z;
+		groundOfSelected = gameTiles[toX, toZ];
+		
+		if(groundOfSelected.GetComponent<GameTile>().hasGround())
+			return;
+		
+		if(PhotonNetwork.connected){
+			photonView.RPC("_rpcChangeGrounds", PhotonTargets.All,fromX, fromZ, toX, toZ);
+		}else{
+			networkView.RPC("_rpcChangeGrounds",RPCMode.All,fromX, fromZ, toX, toZ);	
+		}
+		
+	}
 	
+	[RPC]
+	public void _rpcChangeGrounds(int fromX, int fromZ,int toX,int toZ){
+		GameObject fromTile = gameTiles[fromX, fromZ];
+		GameObject toTile	= gameTiles[toX, toZ];
+		
+		toTile.GetComponent<GameTile>().migrateTypes(fromTile);
+	}
 	
 }
 
