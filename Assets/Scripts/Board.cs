@@ -21,6 +21,7 @@ public class Board : MonoBehaviour
 	public int playerNumber;
 	private int createdGrounds = 0;
 	
+	
 	public GameObject groundOfSelected = null;
 	
 	void Start ()
@@ -274,7 +275,10 @@ public class Board : MonoBehaviour
 			atackPiece(pieceGameObject);
 			ballSet = true;
 		}else{
-			
+			if(gameManager.getPlayerId() != pieceGameObject.GetComponent<GamePiece>().playerBelong)
+				return;//nao eh tua peca
+				
+				
 			GameObject tile = gameTiles[x,z];
 			Debug.Log(tile.gameObject.transform.position.x.ToString() + "|" +tile.gameObject.transform.position.z.ToString() + tile.gameObject.name.ToString());
 			

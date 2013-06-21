@@ -9,16 +9,25 @@ public class GameManager : MonoBehaviour {
 	public bool isFirstPlayer = true;
 	private Chat chat;
 	public Board gameBoard;
+	
+	private int playerId = 1;
 	public int playerRound = 0;
 	public int playerTime;
+	
 	public bool isLocal = false;
 	private PhotonView photonView;
 	private bool onMountPhase = true;
 	
+	private int playersReady = 0;
+	private bool imReady = false;
+	public GameObject gameGate;
+	private bool canPlay = false;
+	
+	
 	void Start(){
 		photonView = (PhotonView) this.GetComponent<PhotonView>();	
 	}
-	
+		
     void OnJoinedRoom()
     {
         StartGame();
@@ -66,7 +75,7 @@ public class GameManager : MonoBehaviour {
     }
 	
     public void StartGame(){
-		Camera.main.farClipPlane = 1000; //Main menu set this to 0.4 for a nicer BG    
+		  
 		if(PhotonNetwork.connected){
 			photonView.RPC("PlayerConnected", PhotonTargets.All);
 		}else{
@@ -102,16 +111,71 @@ public class GameManager : MonoBehaviour {
 		SendChatMessage("embaralharemos as pecas! preparem-se!");
 		
 	}
-
+	
+	private int playerCount = 1;
+    void OnPlayerConnected(NetworkPlayer player) {
+        playerCount++;
+		playerId++;
+		if(playerCount==2){
+			if(PhotonNetwork.connected){
+				photonView.RPC("letsBegin", PhotonTargets.All);
+			}else{
+				networkView.RPC("letsBegin",RPCMode.All);
+			}	
+		}
+    }
+	
+	[RPC]
+	void letsBegin(){
+		canPlay = true;
+		Camera.main.farClipPlane = 1000; 
+		if(playerId==2){
+			Camera.main.transform.position = new Vector3(8.729182f,7.38392f,-0.0770278f);
+			Camera.main.transform.rotation = Quaternion.Euler(30.10073f, 272.0699f, 359.6782f);
+		}
+		// YUNO funciona?!!?!?!?
+		//Camera.main.gameObject.GetComponent<MouseOrbit>().enabled = true;
+		
+	}
+	
     void OnGUI()
     {
-        if (PhotonNetwork.room == null) return; //Only display this GUI when inside a room
+		if(!canPlay & hasConnection()){
+			GUILayout.BeginArea(new Rect((Screen.width - 400) / 2, (Screen.height - 300) / 2, 400, 300));
+		        GUILayout.Label("Aguardando o oponente");
+	        GUILayout.EndArea();
+		}
+		if(!imReady && hasConnection() && canPlay){
+			GUILayout.BeginArea(new Rect(0, 0, 150, 500));
+				GUILayout.BeginHorizontal();
+					if(GUILayout.Button ("Estou Pronto")){
+						imReady = true;
+						playerIsReady();
+					}
+		        GUILayout.EndHorizontal();
+	        GUILayout.EndArea();	
+		}
+        
+		
+		if (PhotonNetwork.room == null) return; //Only display this GUI when inside a room
 
         if (GUILayout.Button("Leave& QUIT"))
         {
             PhotonNetwork.LeaveRoom();
         }
+		
+		
+		
     }
+	
+	public bool hasConnection(){
+		if(PhotonNetwork.connected){
+			return true;
+		}else{
+			return !(Network.peerType == NetworkPeerType.Disconnected);
+		}
+		
+	}
 	
 	void OnPhotonPlayerDisconnected(PhotonPlayer player){
     	SendChatMessage("Player Desconectado: " + player);
@@ -129,6 +193,27 @@ public class GameManager : MonoBehaviour {
 	
 	public bool isOnMountPhase(){
 		return onMountPhase;
+	}
+	
+	void playerIsReady(){
+		if(PhotonNetwork.connected){
+			photonView.RPC("_playerIsReady", PhotonTargets.All);
+		}else{
+			networkView.RPC("_playerIsReady",RPCMode.All);
+		}
+	}
+	
+	[RPC]
+	void _playerIsReady(){
+		playersReady++;
+		if(playersReady == 2){
+			Destroy(gameGate);
+			onMountPhase = false;
+		}
+	}
+	
+	public int getPlayerId(){
+		return playerId;	
 	}
   
 }

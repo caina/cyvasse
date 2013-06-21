@@ -26,7 +26,7 @@ public class GamePiece : MonoBehaviour {
 	
 	void OnMouseDown(){
 		//verificar se a peca eh minha
-		
+			
 		gameBoard.selectPiece(this.gameObject);
 	}
 	

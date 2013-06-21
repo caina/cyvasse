@@ -9,6 +9,8 @@ Project("{B789D0A7-20C2-3847-FA17-FF8C2A7924C9}") = "cyvasse", "Assembly-CSharp-
 EndProject
 Project("{B789D0A7-20C2-3847-FA17-FF8C2A7924C9}") = "cyvasse", "Assembly-UnityScript-firstpass.unityproj", "{2C99A8F4-F1DA-6683-4EA3-ACFF08070263}"
 EndProject
+Project("{B789D0A7-20C2-3847-FA17-FF8C2A7924C9}") = "cyvasse", "Assembly-UnityScript.unityproj", "{8AF00A06-57D4-7AE1-0209-E1C7270FD6E6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,11 +33,15 @@ Global
 		{2C99A8F4-F1DA-6683-4EA3-ACFF08070263}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2C99A8F4-F1DA-6683-4EA3-ACFF08070263}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2C99A8F4-F1DA-6683-4EA3-ACFF08070263}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8AF00A06-57D4-7AE1-0209-E1C7270FD6E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AF00A06-57D4-7AE1-0209-E1C7270FD6E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AF00A06-57D4-7AE1-0209-E1C7270FD6E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AF00A06-57D4-7AE1-0209-E1C7270FD6E6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-																									GlobalSection(MonoDevelopProperties) = preSolution
+																																GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Assembly-CSharp.csproj
 		Policies = $0
 		$0.TextStylePolicy = $1
