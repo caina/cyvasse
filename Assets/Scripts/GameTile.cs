@@ -49,14 +49,14 @@ public class GameTile : MonoBehaviour{
 		if(!isFrozen()){
 			isTileOption = true;
 		//	Debug.Log("me selecionou! "+x.ToString()+" - "+z.ToString());
-			iTween.MoveTo(gameObject, new Vector3(currentPosition.x,.5f,currentPosition.z),.2f);
+			iTween.MoveTo(gameObject, new Vector3(currentPosition.x,.15f,currentPosition.z),.2f);
 		}
 	}
 	
 	public void hideOptions(){
 		if(isTileOption){
 			isTileOption = false;
-			Debug.Log("to saindo");
+			//Debug.Log("to saindo");
 			iTween.MoveTo(gameObject,currentPosition,.4f);
 		}
 	}
@@ -71,7 +71,7 @@ public class GameTile : MonoBehaviour{
 		}
 		
 		
-		if(!isActive && !isFrozen()){
+		if(!isActive && !isFrozen() && onMeId==99999){
 			if(!gameBoard.ballSet){
 				renderer.material.color=Color.yellow;
 			}else{
@@ -93,6 +93,8 @@ public class GameTile : MonoBehaviour{
 		//movimentar peca na faze de construcao
 		if(gameBoard.gameManager.isOnMountPhase()){
 			if(hasGround() && gameBoard.groundOfSelected == null){
+				//deselcionar peca
+				gameBoard.unselectPiece();
 				gameBoard.groundOfSelected = gameObject;
 			}else{
 				gameBoard.groundOfSelected = null;

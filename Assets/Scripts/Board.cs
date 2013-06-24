@@ -13,7 +13,7 @@ public class Board : MonoBehaviour
 	public int rate = 10;
 	private int numberPlayersPieces = 11;
 	public bool ballSet = true;
-	public GameObject[,] gameTiles = new GameObject[10,10];
+	public GameObject[,] gameTiles = new GameObject[11,11];
 	public GameObject[] gamePieces = new GameObject[100];
 	public GameManager gameManager;
 	public int selectedPiece;
@@ -59,17 +59,19 @@ public class Board : MonoBehaviour
 		
 		currentTarget=target;
 		ballSet=false;
+		ball = getSelectedPiece();
+		
 		Vector3 position = target.transform.position;
 		if(PhotonNetwork.connected){
-			photonView.RPC("movePiece", PhotonTargets.All,currentTarget.transform.position,x,z);
+			photonView.RPC("movePiece", PhotonTargets.All,currentTarget.transform.position,x,z,ball.GetComponent<GamePiece>().id);
 		}else{
-			networkView.RPC("movePiece",RPCMode.All,currentTarget.transform.position,x,z);	
+			networkView.RPC("movePiece",RPCMode.All,currentTarget.transform.position,x,z,ball.GetComponent<GamePiece>().id);	
 		}
 	}
 	
 	[RPC]
-	public void movePiece(Vector3 targetPosition, int x,int z){
-		ball = getSelectedPiece();
+	public void movePiece(Vector3 targetPosition, int x,int z, int objPos){
+		ball = gamePieces[objPos];
 		tile = (GameObject) gameTiles[x,z];
 		myTile = (GameObject) gameTiles[ball.GetComponent<GamePiece>().onMeX, ball.GetComponent<GamePiece>().onMeZ];
 		Vector3 tilePosition = tile.gameObject.transform.position;
@@ -152,7 +154,7 @@ public class Board : MonoBehaviour
 		return new GameObject();
 	}
 	
-	
+	private GameObject creatingTempObject;
 	public void ShuffleParts(){
 		//int lastZ=-5;
 		//int lastX=-5;
@@ -162,40 +164,31 @@ public class Board : MonoBehaviour
 		int createdObjects = 1;
 		
 		for (int i = 0; i < 5; i++) {
-			for (int j = 0; j < 9; j++) {
+			for (int j = 1; j < 10; j++) {
 
-				if(createdObjects < numberPlayersPieces && currentPlayerTime == 1){
-					if(createdObjects==10)
-						currentPlayerTime = 2;
+				if(createdObjects < numberPlayersPieces){
+
+					GameObject ball = null;
+					GameObject tile = gameTiles[i,j];
+					ballPosition = tile.transform.position;
+					tile.GetComponent<GameTile>().onMeId =createdObjects; 
+					ballPosition.y = .15f;
+						
+					creatingTempObject = getGamePieceByPosition(createdObjects,1);
+					ball = (GameObject)Instantiate(creatingTempObject, ballPosition,Quaternion.identity);
+					
+					ball.GetComponent<GamePiece>().id = createdObjects;
+					ball.GetComponent<GamePiece>().onMeX = i;
+					ball.GetComponent<GamePiece>().onMeZ = j;
 					
 					
-					
-						GameObject ball = null;
-						GameObject tile = gameTiles[i,j];
-						ballPosition = tile.transform.position;
-						tile.GetComponent<GameTile>().onMeId =createdObjects; 
-						ballPosition.y = .5f;
-						ball = (GameObject)Instantiate((GameObject)Resources.Load("GameBall"), ballPosition,Quaternion.identity);
-						
-						ball.GetComponent<GamePiece>().id = createdObjects;
-						ball.GetComponent<GamePiece>().onMeX = i;
-						ball.GetComponent<GamePiece>().onMeZ = j;
-						ball.GetComponent<GamePiece>().myType = 1;
-						ball.GetComponent<GamePiece>().maxRangeAtack = 1;
-						
-						
-						if(createdObjects ==1){
-							ball.GetComponent<GamePiece>().pieceMaxMoves = 7;
-							ball.renderer.material.color=Color.black;
-						}
-						
-						ball.GetComponent<GamePiece>().playerBelong = currentPlayerTime;
-						ball.name= "Peca "+i.ToString() + " - "+ j.ToString();
-						ball.SendMessage("SetGameboard",this);
-						gamePieces[createdObjects] = ball;
-						createdObjects++;
+					ball.GetComponent<GamePiece>().playerBelong = currentPlayerTime;
+					ball.name= "Peca "+i.ToString() + " - "+ j.ToString();
+					ball.SendMessage("SetGameboard",this);
+					gamePieces[createdObjects] = ball;
+					createdObjects++;
 				}else{
-				
+					currentPlayerTime = 2;
 					//after create all this pieces, is time to create the ground
 					createGround(i,j);
 				
@@ -209,19 +202,22 @@ public class Board : MonoBehaviour
 		for (int i = 9; i > 5; i--) {
 			for (int j = 9; j > 0; j--) {
 
-				if(createdObjects < (numberPlayersPieces+numberPlayersPieces) && currentPlayerTime == 2){
+				if(createdObjects < (numberPlayersPieces*2) && currentPlayerTime == 2){
 										
 					GameObject ball = null;
 					GameObject tile = gameTiles[i,j];
 					ballPosition = tile.transform.position;
 					tile.GetComponent<GameTile>().onMeId =createdObjects; 
-					ballPosition.y = .5f;
-					ball = (GameObject)Instantiate((GameObject)Resources.Load("GameBall"), ballPosition,Quaternion.identity);
+					ballPosition.y = .15f;
+					
+					creatingTempObject = getGamePieceByPosition(createdObjects-numberPlayersPieces,2);
+					ball = (GameObject)Instantiate(creatingTempObject, ballPosition,Quaternion.identity);
+					//ball = (GameObject)Instantiate((GameObject)Resources.Load("GameBall"), ballPosition,Quaternion.identity);
 					
 					ball.GetComponent<GamePiece>().id = createdObjects;
 					ball.GetComponent<GamePiece>().onMeX = i;
 					ball.GetComponent<GamePiece>().onMeZ = j;
-					ball.GetComponent<GamePiece>().myType = 1;
+					//ball.GetComponent<GamePiece>().myType = 1;
 					ball.GetComponent<GamePiece>().maxRangeAtack = 1;
 					
 					ball.GetComponent<GamePiece>().playerBelong = currentPlayerTime;
@@ -237,8 +233,41 @@ public class Board : MonoBehaviour
 				}
 			}
 		}
-		
 	}
+	
+	private GameObject getGamePieceByPosition(int pos, int player){
+		if(player==2)
+			Debug.Log ("posicao: "+pos.ToString());
+		
+		GameObject tmp = null;
+		Texture text = null;
+		
+		if(pos >= 0 && pos < 2){
+			tmp = (GameObject)Resources.Load("GamePieces/Plebe");
+			text = (Texture)Resources.Load("textures/Player"+player.ToString()+"/Plebe");
+			tmp.renderer.material.SetTexture("_MainTex",text);
+			return tmp;
+		}else if(pos >=2 && pos < 5){
+			//lanceiro
+			return	(GameObject)Resources.Load("GamePieces/Plebe");
+		}else if(pos >=5 && pos < 7){
+			return	(GameObject)Resources.Load("GamePieces/LightHorse");
+		}else if(pos >=7 && pos < 8){
+			return	(GameObject)Resources.Load("GamePieces/HeavyHorse");	
+		}else if(pos >=8 && pos < 9){
+			return	(GameObject)Resources.Load("GamePieces/Elephant");	
+		}else if(pos >=9 && pos < 10){
+			tmp =(GameObject)Resources.Load("GamePieces/Dragon"); 
+			text = (Texture)Resources.Load("textures/Player"+player.ToString()+"/Dragon");
+			tmp.renderer.material.SetTexture("_MainTex",text);
+			return tmp;
+		}else if(pos >=10 && pos < 11){
+			return	(GameObject)Resources.Load("GamePieces/King");	
+		}
+		//em caso de merda...
+		return	(GameObject)Resources.Load("GamePieces/Plebe");
+	}
+	
 	
 	void createGround(int x, int z){
 		Debug.Log(createdGrounds);
@@ -261,6 +290,11 @@ public class Board : MonoBehaviour
 	public GameObject getSelectedPiece(){
 		return gamePieces[selectedPiece];	
 	}
+	
+	public GameObject getSelectedPiece(int piece){
+		return gamePieces[piece];	
+	}
+	
 	public bool hasPieceSelected(){
 		return gamePieces[selectedPiece]!=null;
 	}
@@ -283,20 +317,29 @@ public class Board : MonoBehaviour
 			Debug.Log(tile.gameObject.transform.position.x.ToString() + "|" +tile.gameObject.transform.position.z.ToString() + tile.gameObject.name.ToString());
 			
 			int piece = pieceGameObject.GetComponent<GamePiece>().id;
+			
+			if(getSelectedPiece()!=null){
+				iTween.MoveTo(getSelectedPiece(), new Vector3(getSelectedPiece().transform.position.x,.15f,getSelectedPiece().transform.position.z),.2f);	
+			}
+			
+			
+			if(hasPieceSelected())
+				getSelectedPiece().renderer.material.color=Color.blue;
+			
+			this.selectedPiece = piece;	
+			getSelectedPiece().renderer.material.color=Color.yellow;
+			
 			if(PhotonNetwork.connected){
-				photonView.RPC("_selectPiece", PhotonTargets.All,piece);
+				photonView.RPC("_movePiece", PhotonTargets.All,piece);
 			}else{
-				networkView.RPC("_selectPiece",RPCMode.All,piece);	
+				networkView.RPC("_movePiece",RPCMode.All,piece);	
 			}	
 		}
 	}
 	
 	[RPC]
-	void _selectPiece(int piece){
-		if(hasPieceSelected())
-			getSelectedPiece().renderer.material.color=Color.blue;
-		this.selectedPiece = piece;	
-		getSelectedPiece().renderer.material.color=Color.yellow;
+	void _movePiece(int piece){
+		iTween.MoveTo(getSelectedPiece(piece), new Vector3(getSelectedPiece(piece).transform.position.x,.5f,getSelectedPiece(piece).transform.position.z),.2f);
 	}
 	
 	
@@ -354,7 +397,8 @@ public class Board : MonoBehaviour
 				photonView.RPC("_atackRpc", PhotonTargets.All,target.GetComponent<GamePiece>().id);
 			}else{
 				networkView.RPC("_atackRpc",RPCMode.All,target.GetComponent<GamePiece>().id);	
-			}	
+			}
+			SetTarget(getTileByPiece(target));
 		}
 		
 	}
@@ -371,7 +415,7 @@ public class Board : MonoBehaviour
 		gamePieces[pieceId] = null;
 		Instantiate(pieceKillEffect, positionExplode,Quaternion.identity);
 		
-		SetTarget(killedTile);
+		
 	}
 	
 	public bool canPerformMove(GameObject myTile, GameObject targetTile, int movesCanPerform){
@@ -432,7 +476,7 @@ public class Board : MonoBehaviour
 		}
 	}
 	public void showMovementOptions(GameObject selectedPiece){
-		Debug.Log("slecionei");
+		//Debug.Log("slecionei");
 		GameObject tile = getTileByPiece(selectedPiece);
 		if(tile==null)
 			return;
@@ -496,6 +540,15 @@ public class Board : MonoBehaviour
 			networkView.RPC("_rpcChangeGrounds",RPCMode.All,fromX, fromZ, toX, toZ);	
 		}
 		
+	}
+	
+	public void unselectPiece(){
+		/*
+		if(PhotonNetwork.connected){
+			photonView.RPC("_selectPiece", PhotonTargets.All,0);
+		}else{
+			networkView.RPC("_selectPiece",RPCMode.All,0);	
+		}*/	
 	}
 	
 	[RPC]

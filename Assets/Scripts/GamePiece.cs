@@ -9,7 +9,7 @@ public class GamePiece : MonoBehaviour {
 	public int id;
 	public int onMeX;
 	public int onMeZ;
-	public int myType;
+	public string myType;
 	public int playerBelong;
 	public int maxRangeAtack;
 	public int powerLevel;
@@ -26,7 +26,7 @@ public class GamePiece : MonoBehaviour {
 	
 	void OnMouseDown(){
 		//verificar se a peca eh minha
-			
+		Debug.Log(myType);	
 		gameBoard.selectPiece(this.gameObject);
 	}
 	

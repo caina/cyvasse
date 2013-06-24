@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour {
 	private int playersReady = 0;
 	private bool imReady = false;
 	public GameObject gameGate;
-	private bool canPlay = false;
+	private bool canPlay = true;
 	
 	
 	void Start(){
@@ -75,7 +75,7 @@ public class GameManager : MonoBehaviour {
     }
 	
     public void StartGame(){
-		  
+		Camera.main.farClipPlane = 1000; 
 		if(PhotonNetwork.connected){
 			photonView.RPC("PlayerConnected", PhotonTargets.All);
 		}else{
