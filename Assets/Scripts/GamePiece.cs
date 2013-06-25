@@ -13,6 +13,7 @@ public class GamePiece : MonoBehaviour {
 	public int playerBelong;
 	public int maxRangeAtack;
 	public int powerLevel;
+	public bool isUp = false;
 	
 	// Use this for initialization
 	void Start () {

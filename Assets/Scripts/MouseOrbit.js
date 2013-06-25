@@ -12,6 +12,7 @@ private var y = 0.0;
 private var canMove:boolean;
 @script AddComponentMenu("Camera-Control/Mouse Orbit")
 
+
 function Start () {
     var angles = transform.eulerAngles;
     x = angles.y;
@@ -20,6 +21,7 @@ function Start () {
 	// Make the rigid body not change rotation
    	if (rigidbody)
 		rigidbody.freezeRotation = true;
+		
 	AlterarCamera();
 }
 

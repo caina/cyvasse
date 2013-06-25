@@ -197,7 +197,8 @@ public class Board : MonoBehaviour
 				
 				
 			}
-		}
+		}	
+		
 		createdGrounds = 0;
 		for (int i = 9; i > 5; i--) {
 			for (int j = 9; j > 0; j--) {
@@ -243,29 +244,28 @@ public class Board : MonoBehaviour
 		Texture text = null;
 		
 		if(pos >= 0 && pos < 2){
-			tmp = (GameObject)Resources.Load("GamePieces/Plebe");
-			text = (Texture)Resources.Load("textures/Player"+player.ToString()+"/Plebe");
-			tmp.renderer.material.SetTexture("_MainTex",text);
+			tmp = (GameObject)Resources.Load("@GamePieces/Player"+player.ToString()+"/Plebe");
+			
 			return tmp;
 		}else if(pos >=2 && pos < 5){
 			//lanceiro
-			return	(GameObject)Resources.Load("GamePieces/Plebe");
+			return	(GameObject)Resources.Load("@GamePieces/Player"+player.ToString()+"/Plebe");
 		}else if(pos >=5 && pos < 7){
-			return	(GameObject)Resources.Load("GamePieces/LightHorse");
+			return	(GameObject)Resources.Load("@GamePieces/Player"+player.ToString()+"/LightHorse");
 		}else if(pos >=7 && pos < 8){
-			return	(GameObject)Resources.Load("GamePieces/HeavyHorse");	
+			return	(GameObject)Resources.Load("@GamePieces/Player"+player.ToString()+"/HeavyHorse");	
 		}else if(pos >=8 && pos < 9){
-			return	(GameObject)Resources.Load("GamePieces/Elephant");	
+			return	(GameObject)Resources.Load("@GamePieces/Player"+player.ToString()+"/Elephant");	
 		}else if(pos >=9 && pos < 10){
-			tmp =(GameObject)Resources.Load("GamePieces/Dragon"); 
-			text = (Texture)Resources.Load("textures/Player"+player.ToString()+"/Dragon");
-			tmp.renderer.material.SetTexture("_MainTex",text);
+			tmp =(GameObject)Resources.Load("@GamePieces/Player"+player.ToString()+"/Dragon"); 
+			
+			
 			return tmp;
 		}else if(pos >=10 && pos < 11){
-			return	(GameObject)Resources.Load("GamePieces/King");	
+			return	(GameObject)Resources.Load("@GamePieces/Player"+player.ToString()+"/King");	
 		}
 		//em caso de merda...
-		return	(GameObject)Resources.Load("GamePieces/Plebe");
+		return	(GameObject)Resources.Load("@GamePieces/Player"+player.ToString()+"/Plebe");
 	}
 	
 	
@@ -317,29 +317,35 @@ public class Board : MonoBehaviour
 			Debug.Log(tile.gameObject.transform.position.x.ToString() + "|" +tile.gameObject.transform.position.z.ToString() + tile.gameObject.name.ToString());
 			
 			int piece = pieceGameObject.GetComponent<GamePiece>().id;
-			
-			if(getSelectedPiece()!=null){
-				iTween.MoveTo(getSelectedPiece(), new Vector3(getSelectedPiece().transform.position.x,.15f,getSelectedPiece().transform.position.z),.2f);	
-			}
-			
-			
-			if(hasPieceSelected())
-				getSelectedPiece().renderer.material.color=Color.blue;
-			
+						
 			this.selectedPiece = piece;	
-			getSelectedPiece().renderer.material.color=Color.yellow;
 			
 			if(PhotonNetwork.connected){
-				photonView.RPC("_movePiece", PhotonTargets.All,piece);
+				photonView.RPC("_selectPiece", PhotonTargets.All,piece);
 			}else{
-				networkView.RPC("_movePiece",RPCMode.All,piece);	
+				networkView.RPC("_selectPiece",RPCMode.All,piece);	
 			}	
 		}
+		
 	}
 	
+	//-------------------------
+	// MOSTRA QUE PECA ESTA SELECIONADA, COLOCANDO ELA UM POUCO PRA CIMA
+	// E AS OUTRAS COLOCANDO NO LOCAL DEVIDO.
 	[RPC]
-	void _movePiece(int piece){
-		iTween.MoveTo(getSelectedPiece(piece), new Vector3(getSelectedPiece(piece).transform.position.x,.5f,getSelectedPiece(piece).transform.position.z),.2f);
+	void _selectPiece(int piece){
+		
+		gamePieces[piece].GetComponent<GamePiece>().isUp = true;
+		for(int i=0; i< gamePieces.Length; i++){
+			if(gamePieces[i]!=null){
+				if(gamePieces[i].GetComponent<GamePiece>().isUp){
+					iTween.MoveTo(gamePieces[i], new Vector3(gamePieces[i].transform.position.x,.15f,gamePieces[i].transform.position.z),.2f);	
+					gamePieces[i].GetComponent<GamePiece>().isUp = false;
+				}
+			}
+		}
+		gamePieces[piece].GetComponent<GamePiece>().isUp = true;
+		iTween.MoveTo((GameObject)gamePieces[piece], new Vector3(gamePieces[piece].transform.position.x,.5f,gamePieces[piece].transform.position.z),.2f);
 	}
 	
 	
@@ -530,7 +536,7 @@ public class Board : MonoBehaviour
 		int fromX = groundOfSelected.GetComponent<GameTile>().x;
 		int fromZ = groundOfSelected.GetComponent<GameTile>().z;
 		groundOfSelected = gameTiles[toX, toZ];
-		
+		Debug.Log(toX.ToString()+" () "+toZ.ToString());
 		if(groundOfSelected.GetComponent<GameTile>().hasGround())
 			return;
 		

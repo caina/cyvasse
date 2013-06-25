@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour {
     // read the documentation for info how to spawn dynamically loaded game objects at runtime (not using Resources folders)
     public string playerPrefabName = "Charprefab";
 	public bool isFirstPlayer = true;
+	public GameObject camera;
 	private Chat chat;
 	public Board gameBoard;
 	
@@ -196,6 +197,9 @@ public class GameManager : MonoBehaviour {
 	}
 	
 	void playerIsReady(){
+		 Camera cam = (Camera)FindObjectOfType(typeof(Camera));
+   		 cam.GetComponent<MouseOrbit>().enabled = true;
+		
 		if(PhotonNetwork.connected){
 			photonView.RPC("_playerIsReady", PhotonTargets.All);
 		}else{

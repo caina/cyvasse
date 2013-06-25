@@ -1,30 +1,50 @@
 GfxDevice: creating device client; threaded=1
 Direct3D:
-    Version:  Direct3D 9.0c [aticfx32.dll 8.17.10.1172]
-    Renderer: ATI Radeon HD 5500 Series
-    Vendor:   ATI
-    VRAM:     1012 MB (via DXGI)
-    Caps:     Shader=30 DepthRT=1 NativeDepth=1 NativeShadow=1 DF16=1 DF24=1 INTZ=1 RAWZ=0 NULL=1 RESZ=1 SlowINTZ=1
-desktop: 1920x1080 60Hz; virtual: 3280x1080 at 0,0
+    Version:  Direct3D 9.0c [nvd3dum.dll 9.18.13.745]
+    Renderer: NVIDIA Quadro FX 580
+    Vendor:   NVIDIA
+    VRAM:     1390 MB (via DXGI)
+    Caps:     Shader=30 DepthRT=1 NativeDepth=1 NativeShadow=1 DF16=0 DF24=0 INTZ=1 RAWZ=0 NULL=1 RESZ=0 SlowINTZ=0
+desktop: 1680x1050 59Hz; virtual: 1680x1050 at 0,0
 <RI> Initializing input.
 <RI> Input initialized.
 Initialize engine version: 3.5.7f6
 Begin MonoManager ReloadAssembly
-Platform assembly: C:\Unity_workspace\cyvasse\teste_Data\Managed\UnityEngine.dll (this message is harmless)
-Loading C:\Unity_workspace\cyvasse\teste_Data\Managed\UnityEngine.dll into Unity Child Domain
-Platform assembly: C:\Unity_workspace\cyvasse\teste_Data\Managed\Assembly-CSharp-firstpass.dll (this message is harmless)
-Loading C:\Unity_workspace\cyvasse\teste_Data\Managed\Assembly-CSharp-firstpass.dll into Unity Child Domain
-Platform assembly: C:\Unity_workspace\cyvasse\teste_Data\Managed\Assembly-CSharp.dll (this message is harmless)
-Loading C:\Unity_workspace\cyvasse\teste_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
-Platform assembly: C:\Unity_workspace\cyvasse\teste_Data\Managed\Assembly-UnityScript-firstpass.dll (this message is harmless)
-Loading C:\Unity_workspace\cyvasse\teste_Data\Managed\Assembly-UnityScript-firstpass.dll into Unity Child Domain
-Platform assembly: C:\Unity_workspace\cyvasse\teste_Data\Managed\Assembly-UnityScript.dll (this message is harmless)
-Loading C:\Unity_workspace\cyvasse\teste_Data\Managed\Assembly-UnityScript.dll into Unity Child Domain
-Platform assembly: C:\Unity_workspace\cyvasse\teste_Data\Managed\Photon3Unity3D.dll (this message is harmless)
-Loading C:\Unity_workspace\cyvasse\teste_Data\Managed\Photon3Unity3D.dll into Unity Child Domain
-- Completed reload, in  0.051 seconds
-Platform assembly: C:\Unity_workspace\cyvasse\teste_Data\Managed\System.Core.dll (this message is harmless)
-Platform assembly: C:\Unity_workspace\cyvasse\teste_Data\Managed\System.dll (this message is harmless)
+Platform assembly: C:\Users\0105525\Desktop\cyvasse-master\teste_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading C:\Users\0105525\Desktop\cyvasse-master\teste_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: C:\Users\0105525\Desktop\cyvasse-master\teste_Data\Managed\Assembly-CSharp-firstpass.dll (this message is harmless)
+Loading C:\Users\0105525\Desktop\cyvasse-master\teste_Data\Managed\Assembly-CSharp-firstpass.dll into Unity Child Domain
+Platform assembly: C:\Users\0105525\Desktop\cyvasse-master\teste_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading C:\Users\0105525\Desktop\cyvasse-master\teste_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: C:\Users\0105525\Desktop\cyvasse-master\teste_Data\Managed\Assembly-UnityScript-firstpass.dll (this message is harmless)
+Loading C:\Users\0105525\Desktop\cyvasse-master\teste_Data\Managed\Assembly-UnityScript-firstpass.dll into Unity Child Domain
+Platform assembly: C:\Users\0105525\Desktop\cyvasse-master\teste_Data\Managed\Assembly-UnityScript.dll (this message is harmless)
+Loading C:\Users\0105525\Desktop\cyvasse-master\teste_Data\Managed\Assembly-UnityScript.dll into Unity Child Domain
+Platform assembly: C:\Users\0105525\Desktop\cyvasse-master\teste_Data\Managed\Photon3Unity3D.dll (this message is harmless)
+Loading C:\Users\0105525\Desktop\cyvasse-master\teste_Data\Managed\Photon3Unity3D.dll into Unity Child Domain
+- Completed reload, in  0.099 seconds
+Platform assembly: C:\Users\0105525\Desktop\cyvasse-master\teste_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: C:\Users\0105525\Desktop\cyvasse-master\teste_Data\Managed\System.dll (this message is harmless)
+Dns.GetHostEntry(app-jp.exitgamesclouds.com) failed: System.Net.Sockets.SocketException: Este host não é conhecido.
+
+  at System.Net.Dns.GetHostByName (System.String hostName) [0x00000] in <filename unknown>:0 
+  at System.Net.Dns.GetHostEntry (System.String hostNameOrAddress) [0x00000] in <filename unknown>:0 
+  at ExitGames.Client.Photon.NConnect..ctor (ExitGames.Client.Photon.EnetPeer npeer) [0x00000] in <filename unknown>:0 
+ 
+(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
+
+Connect() failed: System.ArgumentNullException: Argument cannot be null.
+Parameter name: address
+  at System.Net.IPEndPoint..ctor (System.Net.IPAddress address, Int32 port) [0x00000] in <filename unknown>:0 
+  at System.Net.Sockets.Socket.Connect (System.Net.IPAddress address, Int32 port) [0x00000] in <filename unknown>:0 
+  at ExitGames.Client.Photon.NConnect.StartConnection () [0x00000] in <filename unknown>:0 
+ 
+(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
+
+OnDisconnectedFromPhoton
+ 
+(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
+
 0
  
 (Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
@@ -309,143 +329,23 @@ posicao: 10
  
 (Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
 
-TimeoutDisconnect while connecting to: app-jp.exitgamesclouds.com:5055. Check if the server is available.
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-OnDisconnectedFromPhoton
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
 Connected to server
  
 (Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
 
-Nao posso ir tao longe =(
+Estou movendo 10
  
 (Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
 
-tem alguma coisa na frente
+elephant
  
 (Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
 
-Nao posso ir tao longe =(
+4|-4Block: 9,1
  
 (Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
 
-plebe
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-plebe
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-plebe
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-plebe
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-plebe
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-plebe
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-plebe
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-plebe
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-plebe
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-plebe
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-Nao posso ir tao longe =(
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-Nao posso ir tao longe =(
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-Nao posso ir tao longe =(
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-Nao posso ir tao longe =(
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-Nao posso ir tao longe =(
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-Nao posso ir tao longe =(
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-Nao posso ir tao longe =(
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-plebe
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-4|4Block: 9,9
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-plebe
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-4|3Block: 9,8
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-plebe
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-4|4Block: 9,9
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-tem alguma coisa na frente
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-Nao posso ir tao longe =(
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-plebe
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-4|3Block: 9,8
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-plebe
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-4|3Block: 9,8
+Estou movendo 19
  
 (Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
 
@@ -453,7 +353,7 @@ king
  
 (Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
 
-3|3Block: 8,8
+2-0|1-0
  
 (Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
 
@@ -461,7 +361,7 @@ plebe
  
 (Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
 
-7-8|0-1
+0-0|0-1
  
 (Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
 
@@ -469,315 +369,11 @@ plebe
  
 (Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
 
-7-8|0-1
+0-1|0-2
  
 (Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
 
-plebe
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-7-8|0-1
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-Nao posso ir tao longe =(
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-Nao posso ir tao longe =(
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-Nao posso ir tao longe =(
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-Nao posso ir tao longe =(
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-Nao posso ir tao longe =(
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-plebe
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-7-8|0-2
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-plebe
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-7-8|0-1
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-plebe
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-7-8|0-1
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-plebe
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-7-8|0-1
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-plebe
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-7-8|0-1
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-plebe
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-7-8|0-2
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-plebe
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-7-8|0-2
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-plebe
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-7-8|0-3
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-plebe
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-7-8|0-3
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-plebe
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-7-8|0-2
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-plebe
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-7-8|0-2
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-plebe
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-7-8|0-1
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-plebe
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-7-8|0-1
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-plebe
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-7-8|0-2
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-plebe
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-7-8|0-3
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-plebe
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-7-8|0-4
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-lighthorse
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-7-8|0-5
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-lighthorse
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-7-8|0-6
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-heavyhorse
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-7-8|0-7
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-elephant
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-7-8|0-8
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-dragon
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-7-8|3-9
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-Nao posso ir tao longe =(
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-king
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-7-8|1-1
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-Nao posso ir tao longe =(
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-Nao posso ir tao longe =(
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-elephant
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-7-8|0-8
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-Nao posso ir tao longe =(
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-plebe
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-4|4Block: 9,9
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-Nao posso ir tao longe =(
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-Nao posso ir tao longe =(
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-dragon
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-3|4Block: 8,9
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-dragon
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-3-6|3-5
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-OnDestroy manually allocated PhotonView View (0)0 on Peca 0 - 9 (scene). The viewID is 0. Was it ever (manually) set?
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-Nao posso ir tao longe =(
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-elephant
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-0-9|0-8
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-OnDestroy manually allocated PhotonView View (0)0 on Peca 0 - 8 (scene). The viewID is 0. Was it ever (manually) set?
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-heavyhorse
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-0-8|0-7
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-OnDestroy manually allocated PhotonView View (0)0 on Peca 0 - 7 (scene). The viewID is 0. Was it ever (manually) set?
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-lighthorse
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-0-7|0-6
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-OnDestroy manually allocated PhotonView View (0)0 on Peca 0 - 6 (scene). The viewID is 0. Was it ever (manually) set?
- 
-(Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
-
-OnDestroy manually allocated PhotonView View (0)0 on Peca 8 - 9 (scene). The viewID is 0. Was it ever (manually) set?
+Estou movendo 3
  
 (Filename: C:/BuildAgent/work/14194e8ce88cdf47/Runtime/ExportGenerated/StandalonePlayer/UnityEngineDebug.cpp Line: 43)
 
