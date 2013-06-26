@@ -4,7 +4,7 @@ using System.Collections;
 public class GamePiece : MonoBehaviour {
 	
 	public Board gameBoard;
-	public enum types {piece = 1, tile = 2};
+	//public enum types {piece = 1, tile = 2};
 	public int pieceMaxMoves=1;
 	public int id;
 	public int onMeX;
@@ -14,7 +14,7 @@ public class GamePiece : MonoBehaviour {
 	public int maxRangeAtack;
 	public int powerLevel;
 	public bool isUp = false;
-	
+	public int montainsCanCross = 0;
 	// Use this for initialization
 	void Start () {
 	
@@ -26,6 +26,8 @@ public class GamePiece : MonoBehaviour {
 	}
 	
 	void OnMouseDown(){
+		if(!gameBoard.gameManager.isMyRound())
+			return;
 		//verificar se a peca eh minha
 		Debug.Log(myType);	
 		gameBoard.selectPiece(this.gameObject);

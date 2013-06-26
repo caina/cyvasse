@@ -14,6 +14,8 @@ private var canMove:boolean;
 
 
 function Start () {
+	var foundObs: GameObject[] = GameObject.FindGameObjectsWithTag("eixo");
+	target =  foundObs[0].transform;
     var angles = transform.eulerAngles;
     x = angles.y;
     y = angles.x;

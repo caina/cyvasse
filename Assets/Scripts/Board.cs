@@ -11,7 +11,7 @@ public class Board : MonoBehaviour
 	public GameObject tile;
 	public GameObject myTile;
 	public int rate = 10;
-	private int numberPlayersPieces = 11;
+	private int numberPlayersPieces = 15;
 	public bool ballSet = true;
 	public GameObject[,] gameTiles = new GameObject[11,11];
 	public GameObject[] gamePieces = new GameObject[100];
@@ -21,6 +21,7 @@ public class Board : MonoBehaviour
 	public int playerNumber;
 	private int createdGrounds = 0;
 	
+	public string hintText="";
 	
 	public GameObject groundOfSelected = null;
 	
@@ -30,6 +31,17 @@ public class Board : MonoBehaviour
 		photonView = (PhotonView) this.GetComponent<PhotonView>();
 		ShuffleParts();
 	}
+	
+	
+	void OnGUI()
+    {
+		GUILayout.BeginArea(new Rect(15, Screen.height-25, 250, 250));
+			GUILayout.BeginHorizontal();
+				GUILayout.Label(hintText);
+	        GUILayout.EndHorizontal();
+        GUILayout.EndArea();	
+		
+    }
 	
 	/*
 	public void SetTarget(GameObject target){
@@ -62,11 +74,34 @@ public class Board : MonoBehaviour
 		ball = getSelectedPiece();
 		
 		Vector3 position = target.transform.position;
+		
+		
+		tile = (GameObject) gameTiles[x,z];
+		myTile = (GameObject) gameTiles[ball.GetComponent<GamePiece>().onMeX, ball.GetComponent<GamePiece>().onMeZ];
+		//Vector3 tilePosition = tile.gameObject.transform.position;
+		
+		if(canPerformMove(ball,myTile,tile, ball.GetComponent<GamePiece>().pieceMaxMoves)){
+			if(PhotonNetwork.connected){
+				photonView.RPC("movePiece", PhotonTargets.All,currentTarget.transform.position,x,z,ball.GetComponent<GamePiece>().id);
+			}else{
+				networkView.RPC("movePiece",RPCMode.All,currentTarget.transform.position,x,z,ball.GetComponent<GamePiece>().id);	
+			}
+			gameManager.changeRound();
+		}else{
+			hintText="Personagem nao chega no destino.";
+			Debug.Log("Nao posso ir tao longe =(");	
+			ball = null;
+			tile = null;
+			myTile = null;
+			ballSet=true;
+		}
+		
+		/*
 		if(PhotonNetwork.connected){
 			photonView.RPC("movePiece", PhotonTargets.All,currentTarget.transform.position,x,z,ball.GetComponent<GamePiece>().id);
 		}else{
 			networkView.RPC("movePiece",RPCMode.All,currentTarget.transform.position,x,z,ball.GetComponent<GamePiece>().id);	
-		}
+		}*/
 	}
 	
 	[RPC]
@@ -74,8 +109,33 @@ public class Board : MonoBehaviour
 		ball = gamePieces[objPos];
 		tile = (GameObject) gameTiles[x,z];
 		myTile = (GameObject) gameTiles[ball.GetComponent<GamePiece>().onMeX, ball.GetComponent<GamePiece>().onMeZ];
+		//Vector3 tilePosition = tile.gameObject.transform.position;
+		
+		myTile.GetComponent<GameTile>().onMeId = 99999;
+					
+		tile.GetComponent<GameTile>().onMeId = ball.GetComponent<GamePiece>().id;
+		ball.GetComponent<GamePiece>().onMeX = x;
+		ball.GetComponent<GamePiece>().onMeZ = z;
+		
+		float travelTime = Vector3.Distance(ball.transform.position, targetPosition)/rate;
+		//iTween.MoveTo(ball, iTween.Hash("position", tile.transform.position, "islocal", true, "time", 1,"oncomplete","Reset"));
+		//iTween.MoveBy(ball,iTween.Hash("x",targetPosition.x-ball.transform.position.x,"easetype","easeinoutsine","time",travelTime));
+		//iTween.MoveBy(ball,iTween.Hash("z",targetPosition.z-ball.transform.position.z,"time",travelTime,"delay",0,"easetype","easeinoutsine","oncomplete","Reset","oncompletetarget",gameObject));
+		
+		iTween.MoveBy(ball,iTween.Hash("x",targetPosition.x-ball.transform.position.x,"easetype","easeinoutsine","time",travelTime));
+		iTween.MoveBy(ball,iTween.Hash("z",targetPosition.z-ball.transform.position.z,"time",travelTime,"delay",travelTime,"easetype","easeinoutsine","oncomplete","Reset","oncompletetarget",gameObject));
+		
+	}
+	
+	/***
+	 * 
+	 * [RPC]
+	public void movePiece(Vector3 targetPosition, int x,int z, int objPos){
+		ball = gamePieces[objPos];
+		tile = (GameObject) gameTiles[x,z];
+		myTile = (GameObject) gameTiles[ball.GetComponent<GamePiece>().onMeX, ball.GetComponent<GamePiece>().onMeZ];
 		Vector3 tilePosition = tile.gameObject.transform.position;
-		if(canPerformMove(myTile,tile, ball.GetComponent<GamePiece>().pieceMaxMoves)){
+		if(canPerformMove(ball,myTile,tile, ball.GetComponent<GamePiece>().pieceMaxMoves)){
 			
 			myTile.GetComponent<GameTile>().onMeId = 99999;
 					
@@ -84,16 +144,21 @@ public class Board : MonoBehaviour
 			ball.GetComponent<GamePiece>().onMeZ = z;
 			
 			float travelTime = Vector3.Distance(ball.transform.position, targetPosition)/rate;
+			//iTween.MoveTo(ball, iTween.Hash("position", tile.transform.position, "islocal", true, "time", 1,"oncomplete","Reset"));
+			//iTween.MoveBy(ball,iTween.Hash("x",targetPosition.x-ball.transform.position.x,"easetype","easeinoutsine","time",travelTime));
+			//iTween.MoveBy(ball,iTween.Hash("z",targetPosition.z-ball.transform.position.z,"time",travelTime,"delay",0,"easetype","easeinoutsine","oncomplete","Reset","oncompletetarget",gameObject));
+			
 			iTween.MoveBy(ball,iTween.Hash("x",targetPosition.x-ball.transform.position.x,"easetype","easeinoutsine","time",travelTime));
 			iTween.MoveBy(ball,iTween.Hash("z",targetPosition.z-ball.transform.position.z,"time",travelTime,"delay",travelTime,"easetype","easeinoutsine","oncomplete","Reset","oncompletetarget",gameObject));
 		}else{
+			hintText="Personagem nao chega no destino.";
 			Debug.Log("Nao posso ir tao longe =(");	
 			ball = null;
 			tile = null;
 			myTile = null;
 			ballSet=true;
 		}
-	}
+	}*/
 	
 	
 	
@@ -219,7 +284,6 @@ public class Board : MonoBehaviour
 					ball.GetComponent<GamePiece>().onMeX = i;
 					ball.GetComponent<GamePiece>().onMeZ = j;
 					//ball.GetComponent<GamePiece>().myType = 1;
-					ball.GetComponent<GamePiece>().maxRangeAtack = 1;
 					
 					ball.GetComponent<GamePiece>().playerBelong = currentPlayerTime;
 					ball.name= "Peca "+i.ToString() + " - "+ j.ToString();
@@ -240,28 +304,25 @@ public class Board : MonoBehaviour
 		if(player==2)
 			Debug.Log ("posicao: "+pos.ToString());
 		
-		GameObject tmp = null;
-		Texture text = null;
-		
 		if(pos >= 0 && pos < 2){
-			tmp = (GameObject)Resources.Load("@GamePieces/Player"+player.ToString()+"/Plebe");
-			
-			return tmp;
-		}else if(pos >=2 && pos < 5){
-			//lanceiro
-			return	(GameObject)Resources.Load("@GamePieces/Player"+player.ToString()+"/Plebe");
-		}else if(pos >=5 && pos < 7){
+			return (GameObject)Resources.Load("@GamePieces/Player"+player.ToString()+"/Plebe");
+		}else if(pos >=2 && pos < 4){
+			return	(GameObject)Resources.Load("@GamePieces/Player"+player.ToString()+"/Lancer");
+		}else if(pos >=4 && pos < 6){
 			return	(GameObject)Resources.Load("@GamePieces/Player"+player.ToString()+"/LightHorse");
-		}else if(pos >=7 && pos < 8){
+		}else if(pos >=6 && pos < 7){
 			return	(GameObject)Resources.Load("@GamePieces/Player"+player.ToString()+"/HeavyHorse");	
-		}else if(pos >=8 && pos < 9){
+		}else if(pos >=7 && pos < 8){
 			return	(GameObject)Resources.Load("@GamePieces/Player"+player.ToString()+"/Elephant");	
-		}else if(pos >=9 && pos < 10){
-			tmp =(GameObject)Resources.Load("@GamePieces/Player"+player.ToString()+"/Dragon"); 
-			
-			
-			return tmp;
-		}else if(pos >=10 && pos < 11){
+		}else if(pos >=8 && pos < 11){
+			return	(GameObject)Resources.Load("@GamePieces/Player"+player.ToString()+"/CrossBown");	
+		}else if(pos >=11 && pos < 12){
+			return	(GameObject)Resources.Load("@GamePieces/Player"+player.ToString()+"/Catapult");
+		}else if(pos >=12 && pos < 13){
+			return	(GameObject)Resources.Load("@GamePieces/Player"+player.ToString()+"/Trabuco");
+		}else if(pos >=13 && pos < 14){
+			return (GameObject)Resources.Load("@GamePieces/Player"+player.ToString()+"/Dragon"); 
+		}else if(pos >=14 && pos < 15){
 			return	(GameObject)Resources.Load("@GamePieces/Player"+player.ToString()+"/King");	
 		}
 		//em caso de merda...
@@ -320,6 +381,16 @@ public class Board : MonoBehaviour
 						
 			this.selectedPiece = piece;	
 			
+			//gamePieces[piece].GetComponent<GamePiece>().isUp = true;
+			for(int i=0; i< gamePieces.Length; i++){
+				if(gamePieces[i]!=null){
+					if(gamePieces[i].GetComponent<GamePiece>().playerBelong == playerNumber && gamePieces[i].GetComponent<GamePiece>().isUp){
+						iTween.MoveTo(gamePieces[i], new Vector3(gamePieces[i].transform.position.x,.15f,gamePieces[i].transform.position.z),.2f);	
+						gamePieces[i].GetComponent<GamePiece>().isUp = false;
+					}
+				}
+			}
+			
 			if(PhotonNetwork.connected){
 				photonView.RPC("_selectPiece", PhotonTargets.All,piece);
 			}else{
@@ -335,15 +406,6 @@ public class Board : MonoBehaviour
 	[RPC]
 	void _selectPiece(int piece){
 		
-		gamePieces[piece].GetComponent<GamePiece>().isUp = true;
-		for(int i=0; i< gamePieces.Length; i++){
-			if(gamePieces[i]!=null){
-				if(gamePieces[i].GetComponent<GamePiece>().isUp){
-					iTween.MoveTo(gamePieces[i], new Vector3(gamePieces[i].transform.position.x,.15f,gamePieces[i].transform.position.z),.2f);	
-					gamePieces[i].GetComponent<GamePiece>().isUp = false;
-				}
-			}
-		}
 		gamePieces[piece].GetComponent<GamePiece>().isUp = true;
 		iTween.MoveTo((GameObject)gamePieces[piece], new Vector3(gamePieces[piece].transform.position.x,.5f,gamePieces[piece].transform.position.z),.2f);
 	}
@@ -370,18 +432,32 @@ public class Board : MonoBehaviour
 		if(myZ != targetZ && myX != targetX){
 			canAtack = false;	
 		}
-		
+		int montainsCrosseds = 0;
 		if(myZ == targetZ){
 			//so calcular o x!
 			if(myX < targetX){
 				//	na direita
 				if((myX + movesCanPerform) >= targetX){
 					canAtack = true;
+					while(myX <= targetX){
+						if(gameTiles[myX,myZ].GetComponent<GameTile>().getPieceType().Equals("montain")){
+							montainsCrosseds++;
+							canAtack = false;	
+						}
+						myX++;
+					}
 				}
 			}else{
 				//na esquerda
 				if((myX - movesCanPerform) <= targetX){
 					canAtack = true;
+					while(myX >= targetX){
+						if(gameTiles[myX,myZ].GetComponent<GameTile>().getPieceType().Equals("montain")){
+							montainsCrosseds++;
+							canAtack = false;	
+						}
+						myX--;
+					}
 				}
 			}
 		}else if(myX == targetX){
@@ -390,14 +466,48 @@ public class Board : MonoBehaviour
 				//	a cima
 				if((myZ + movesCanPerform) >= targetZ){
 					canAtack = true;
+					while(myZ <= targetZ){
+						if(gameTiles[myX,myZ].GetComponent<GameTile>().getPieceType().Equals("montain")){
+							montainsCrosseds++;
+							canAtack = false;	
+						}
+						myZ++;
+					}
 				}
 			}else{
 				//a baixo
 				if((myZ - movesCanPerform) <= targetZ){
 					canAtack = true;
+					while(myZ >= targetZ){
+						if(gameTiles[myX,myZ].GetComponent<GameTile>().getPieceType().Equals("montain")){
+							montainsCrosseds++;
+							canAtack = false;	
+						}
+						myZ--;
+					}
 				}
 			}
 		}
+		
+		//poder de atravessar montanhas
+		if(montainsCrosseds>0){
+			if(me.GetComponent<GamePiece>().montainsCanCross >= montainsCrosseds)
+				canAtack = true;
+		}
+		
+	 	GameObject targetPiece = (GameObject) gamePieces[targetTile.GetComponent<GameTile>().onMeId];
+		if(me.GetComponent<GamePiece>().powerLevel < targetPiece.GetComponent<GamePiece>().powerLevel){
+			hintText="Voce e muito fraco para isso.";
+			canAtack=false;
+		}
+		
+		if(me.GetComponent<GamePiece>().myType.Equals("dragon")){
+			if(targetTile.GetComponent<GameTile>().getPieceType().Equals("forest")){
+				hintText="Dragoes nao podem atacar entre a floresta.";
+				canAtack = false;
+			}
+		}
+		
 		if(canAtack){
 			if(PhotonNetwork.connected){
 				photonView.RPC("_atackRpc", PhotonTargets.All,target.GetComponent<GamePiece>().id);
@@ -405,8 +515,7 @@ public class Board : MonoBehaviour
 				networkView.RPC("_atackRpc",RPCMode.All,target.GetComponent<GamePiece>().id);	
 			}
 			SetTarget(getTileByPiece(target));
-		}
-		
+		}		
 	}
 	
 	[RPC]
@@ -419,12 +528,10 @@ public class Board : MonoBehaviour
 		Destroy(targetKill.gameObject);
 		
 		gamePieces[pieceId] = null;
-		Instantiate(pieceKillEffect, positionExplode,Quaternion.identity);
-		
-		
+		Instantiate(pieceKillEffect, positionExplode,Quaternion.identity);		
 	}
 	
-	public bool canPerformMove(GameObject myTile, GameObject targetTile, int movesCanPerform){
+	public bool canPerformMove(GameObject character,GameObject myTile, GameObject targetTile, int movesCanPerform){
 		int myX 	= myTile.GetComponent<GameTile>().x;
 		int myZ		= myTile.GetComponent<GameTile>().z;
 		int targetX = targetTile.GetComponent<GameTile>().x;
@@ -449,11 +556,29 @@ public class Board : MonoBehaviour
 			if(myX < targetX){
 				//	na direita
 				if((myX + movesCanPerform) >= targetX){
+					if(character.GetComponent<GamePiece>().myType!="dragon"){
+						//verificar montanhas proximas
+						while(myX <= targetX){
+							if(gameTiles[myX,myZ].GetComponent<GameTile>().getPieceType().Equals("montain")){
+								return false;	
+							}
+							myX++;
+						}	
+					}
 					return true;
 				}
 			}else{
 				//na esquerda
 				if((myX - movesCanPerform) <= targetX){
+					if(character.GetComponent<GamePiece>().myType!="dragon"){
+						//verificar montanhas proximas
+						while(myX >= targetX){
+							if(gameTiles[myX,myZ].GetComponent<GameTile>().getPieceType().Equals("montain")){
+								return false;	
+							}
+							myX--;
+						}	
+					}
 					return true;
 				}
 			}
@@ -462,11 +587,29 @@ public class Board : MonoBehaviour
 			if(myZ < targetZ){
 				//	a cima
 				if((myZ + movesCanPerform) >= targetZ){
+					if(character.GetComponent<GamePiece>().myType!="dragon"){
+						//verificar montanhas proximas
+						while(myZ <= targetZ){
+							if(gameTiles[myX,myZ].GetComponent<GameTile>().getPieceType().Equals("montain")){
+								return false;	
+							}
+							myZ++;
+						}	
+					}
 					return true;
 				}
 			}else{
 				//a baixo
 				if((myZ - movesCanPerform) <= targetZ){
+					if(character.GetComponent<GamePiece>().myType!="dragon"){
+						//verificar montanhas proximas
+						while(myZ >= targetZ){
+							if(gameTiles[myX,myZ].GetComponent<GameTile>().getPieceType().Equals("montain")){
+								return false;	
+							}
+							myZ--;
+						}	
+					}
 					return true;
 				}
 			}

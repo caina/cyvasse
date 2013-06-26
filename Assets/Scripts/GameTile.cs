@@ -89,6 +89,8 @@ public class GameTile : MonoBehaviour{
 	}
 	
 	void OnMouseDown(){
+		if(!gameBoard.gameManager.isMyRound())
+			return;
 		
 		//movimentar peca na faze de construcao
 		if(gameBoard.gameManager.isOnMountPhase()){
@@ -103,9 +105,9 @@ public class GameTile : MonoBehaviour{
 		
 		if(gameBoard.hasPieceSelected()){
 			//mover peca selecionada
-			if(gameBoard.ballSet){
-				Activate();
-			}
+			//if(gameBoard.ballSet){
+			Activate();
+			//}
 		}
 	}
 	
@@ -163,6 +165,10 @@ public class GameTile : MonoBehaviour{
 	public void migrateTypes(GameObject fromTile){
 		changeType(fromTile.GetComponent<GameTile>().pieceType);
 		fromTile.GetComponent<GameTile>().changeType("");
+	}
+	
+	public string getPieceType(){
+		return pieceType;	
 	}
 	
 }

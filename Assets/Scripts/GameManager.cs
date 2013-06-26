@@ -7,7 +7,6 @@ public class GameManager : MonoBehaviour {
     // read the documentation for info how to spawn dynamically loaded game objects at runtime (not using Resources folders)
     public string playerPrefabName = "Charprefab";
 	public bool isFirstPlayer = true;
-	public GameObject camera;
 	private Chat chat;
 	public Board gameBoard;
 	
@@ -22,8 +21,10 @@ public class GameManager : MonoBehaviour {
 	private int playersReady = 0;
 	private bool imReady = false;
 	public GameObject gameGate;
-	private bool canPlay = true;
+	private bool canPlay = false;
 	
+	public int rounds;
+
 	
 	void Start(){
 		photonView = (PhotonView) this.GetComponent<PhotonView>();	
@@ -47,12 +48,51 @@ public class GameManager : MonoBehaviour {
 	/***
 	 * Muda o turno atual.
 	 * Comeca sempre com o player 1*/
+	/*
 	public void nextRound(){
 		photonView.RPC("changeRound",PhotonTargets.All);
+	}*/
+	
+	public void changeRound(){
+		if(onMountPhase)
+			return;
+		if(PhotonNetwork.connected){
+			photonView.RPC("_changeRound", PhotonTargets.All);
+		}else{
+			networkView.RPC("_changeRound",RPCMode.All);
+		}
+	}
+	//usado apenas para comecar o jogo
+	[RPC]
+	void startRounds(){
+		playerRound = 1;
+		
+		Color lightColor = new Color(188/255.0f,53/255.0f,53/255.0f,0);
+		if(playerRound == 1){
+			lightColor = new Color(53/255.0f,166/255.0f,188/255.0f,0);
+		}
+		
+		GameObject[] lights =  GameObject.FindGameObjectsWithTag("Lights");
+		foreach(GameObject light in lights){
+			iTween.ColorTo(light,lightColor,.3f);	
+		}
 	}
 	
-	void changeRound(){
-		playerRound = (playerRound==1?0:1);	
+	[RPC]
+	void _changeRound(){
+		playerRound = playerRound == 1?2:1;
+		
+		Color lightColor = new Color(188/255.0f,53/255.0f,53/255.0f,0);
+		if(playerRound == 1){
+			lightColor = new Color(53/255.0f,166/255.0f,188/255.0f,0);
+		}
+		
+		GameObject[] lights =  GameObject.FindGameObjectsWithTag("Lights");
+		foreach(GameObject light in lights){
+			iTween.ColorTo(light,lightColor,.3f);	
+		}
+		
+		rounds++;
 	}
 	
 	/***
@@ -60,7 +100,10 @@ public class GameManager : MonoBehaviour {
 	 * identificador do jogador.
 	 * */
 	public bool isMyRound(){
-		return playerTime == playerRound;
+		if(onMountPhase) 
+			return true;
+		
+		return playerId == playerRound;
 	}
     
     IEnumerator OnLeftRoom()
@@ -76,7 +119,7 @@ public class GameManager : MonoBehaviour {
     }
 	
     public void StartGame(){
-		Camera.main.farClipPlane = 1000; 
+		//Camera.main.farClipPlane = 1000; 
 		if(PhotonNetwork.connected){
 			photonView.RPC("PlayerConnected", PhotonTargets.All);
 		}else{
@@ -122,7 +165,8 @@ public class GameManager : MonoBehaviour {
 				photonView.RPC("letsBegin", PhotonTargets.All);
 			}else{
 				networkView.RPC("letsBegin",RPCMode.All);
-			}	
+			}
+			
 		}
     }
 	
@@ -131,9 +175,10 @@ public class GameManager : MonoBehaviour {
 		canPlay = true;
 		Camera.main.farClipPlane = 1000; 
 		if(playerId==2){
-			Camera.main.transform.position = new Vector3(8.729182f,7.38392f,-0.0770278f);
-			Camera.main.transform.rotation = Quaternion.Euler(30.10073f, 272.0699f, 359.6782f);
+			Camera.main.transform.position = new Vector3(8.040245f,8.194799f,-0.0770278f);
+			Camera.main.transform.rotation = Quaternion.Euler(41.20966f, 270.1824f, 359.9654f);
 		}
+		startRounds();
 		// YUNO funciona?!!?!?!?
 		//Camera.main.gameObject.GetComponent<MouseOrbit>().enabled = true;
 		
@@ -146,16 +191,18 @@ public class GameManager : MonoBehaviour {
 		        GUILayout.Label("Aguardando o oponente");
 	        GUILayout.EndArea();
 		}
-		if(!imReady && hasConnection() && canPlay){
-			GUILayout.BeginArea(new Rect(0, 0, 150, 500));
-				GUILayout.BeginHorizontal();
+		
+		GUILayout.BeginArea(new Rect(0, 0, 150, 500));
+			GUILayout.BeginHorizontal();
+				if(!imReady && hasConnection() && canPlay){
 					if(GUILayout.Button ("Estou Pronto")){
 						imReady = true;
 						playerIsReady();
 					}
-		        GUILayout.EndHorizontal();
-	        GUILayout.EndArea();	
-		}
+				}
+	        GUILayout.EndHorizontal();
+        GUILayout.EndArea();	
+		
         
 		
 		if (PhotonNetwork.room == null) return; //Only display this GUI when inside a room
@@ -164,9 +211,6 @@ public class GameManager : MonoBehaviour {
         {
             PhotonNetwork.LeaveRoom();
         }
-		
-		
-		
     }
 	
 	public bool hasConnection(){
@@ -197,8 +241,10 @@ public class GameManager : MonoBehaviour {
 	}
 	
 	void playerIsReady(){
-		 Camera cam = (Camera)FindObjectOfType(typeof(Camera));
-   		 cam.GetComponent<MouseOrbit>().enabled = true;
+		
+		//MouseOrbit orbit = cam.gameObject.GetComponent<MouseOrbit>();
+		//orbit.target = rotationExio.transform;
+		//cam.GetComponent<MouseOrbit>().enabled = true;
 		
 		if(PhotonNetwork.connected){
 			photonView.RPC("_playerIsReady", PhotonTargets.All);
@@ -213,6 +259,9 @@ public class GameManager : MonoBehaviour {
 		if(playersReady == 2){
 			Destroy(gameGate);
 			onMountPhase = false;
+			Camera cam = (Camera)FindObjectOfType(typeof(Camera));
+   			cam.gameObject.AddComponent("MouseOrbit");
+			gameBoard.hintText = "Use o botao direito para girar o cenario!";
 		}
 	}
 	
