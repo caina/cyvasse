@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour {
 	private int playersReady = 0;
 	private bool imReady = false;
 	public GameObject gameGate;
-	private bool canPlay = false;
+	private bool canPlay = true;
 	
 	public int rounds;
 
@@ -56,6 +56,8 @@ public class GameManager : MonoBehaviour {
 	public void changeRound(){
 		if(onMountPhase)
 			return;
+		
+		gameBoard.returnPiecesNaturalState();
 		if(PhotonNetwork.connected){
 			photonView.RPC("_changeRound", PhotonTargets.All);
 		}else{
@@ -119,7 +121,7 @@ public class GameManager : MonoBehaviour {
     }
 	
     public void StartGame(){
-		//Camera.main.farClipPlane = 1000; 
+		Camera.main.farClipPlane = 1000; 
 		if(PhotonNetwork.connected){
 			photonView.RPC("PlayerConnected", PhotonTargets.All);
 		}else{
@@ -259,10 +261,12 @@ public class GameManager : MonoBehaviour {
 		if(playersReady == 2){
 			Destroy(gameGate);
 			onMountPhase = false;
-			Camera cam = (Camera)FindObjectOfType(typeof(Camera));
-   			cam.gameObject.AddComponent("MouseOrbit");
-			gameBoard.hintText = "Use o botao direito para girar o cenario!";
+			
 		}
+		//TODO COLOCAR NO IF DEPOIS DE TERMINAR OS TESTESS
+		Camera cam = (Camera)FindObjectOfType(typeof(Camera));
+		cam.gameObject.AddComponent("MouseOrbit");
+		gameBoard.hintText = "Use o botao direito para girar o cenario!";
 	}
 	
 	public int getPlayerId(){

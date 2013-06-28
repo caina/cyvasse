@@ -23,7 +23,7 @@ function Start () {
 	// Make the rigid body not change rotation
    	if (rigidbody)
 		rigidbody.freezeRotation = true;
-		
+
 	AlterarCamera();
 }
 
@@ -42,10 +42,10 @@ function AlterarCamera(){
 
 function LateUpdate () {
 	canMove=false;
-	
+
 	if(Input.GetMouseButton(1))
 		canMove=true;
-		
+
     if (target && canMove) {
     	AlterarCamera();
     }

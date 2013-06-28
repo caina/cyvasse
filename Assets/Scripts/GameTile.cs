@@ -17,6 +17,8 @@ public class GameTile : MonoBehaviour{
 	public int onMeId = 99999;
 	public bool isTileOption = false;
 	
+	private bool targetSet=false;
+	
 	public Texture defaultTexture;
 	
 	void Start(){
@@ -45,17 +47,32 @@ public class GameTile : MonoBehaviour{
 		iTween.MoveTo(this.gameObject,currentPosition,.4f);
 	}
 	
+	public void isTarget(){
+		targetSet = true;
+		iTween.ColorTo(gameObject,Color.red,.4f);
+		
+	}
+	
 	public void isOption(){
-		if(!isFrozen()){
+		if(!isFrozen() && !targetSet){
 			isTileOption = true;
+			renderer.material.color=Color.green;
 		//	Debug.Log("me selecionou! "+x.ToString()+" - "+z.ToString());
 			iTween.MoveTo(gameObject, new Vector3(currentPosition.x,.15f,currentPosition.z),.2f);
+		}
+	}
+	
+	public void clearTarget(){
+		if(targetSet){
+			iTween.ColorTo(gameObject,currentColor,.4f);
+			targetSet = false;	
 		}
 	}
 	
 	public void hideOptions(){
 		if(isTileOption){
 			isTileOption = false;
+			iTween.ColorTo(gameObject,currentColor,.4f);
 			//Debug.Log("to saindo");
 			iTween.MoveTo(gameObject,currentPosition,.4f);
 		}
@@ -64,29 +81,28 @@ public class GameTile : MonoBehaviour{
 	void OnMouseEnter(){
 		if(gameBoard.gameManager.isOnMountPhase()){
 			if(gameBoard.groundOfSelected != null){
-				if(onMeId==99999){
+				if(onMeId==99999 && getPieceType().Equals("")){
 					gameBoard.rpcChangeGrounds(x,z);
 				}	
 			}
 		}
-		
-		
-		if(!isActive && !isFrozen() && onMeId==99999){
-			if(!gameBoard.ballSet){
-				renderer.material.color=Color.yellow;
-			}else{
-				renderer.material.color=Color.green;
-			}
-			transform.position=new Vector3(currentPosition.x,.5f,currentPosition.z);
+	}	
+	/*
+	if(!isActive && !isFrozen() && onMeId==99999){
+		if(!gameBoard.ballSet){
+			renderer.material.color=Color.yellow;
+		}else{
+			renderer.material.color=Color.green;
 		}
-	}
-	
+		transform.position=new Vector3(currentPosition.x,.5f,currentPosition.z);
+	}*/
+	/*
 	void OnMouseExit(){
 		if(!isActive && !isFrozen()){
 			iTween.ColorTo(gameObject,currentColor,.4f);
 			iTween.MoveTo(gameObject,currentPosition,.4f);
 		}
-	}
+	}*/
 	
 	void OnMouseDown(){
 		if(!gameBoard.gameManager.isMyRound())

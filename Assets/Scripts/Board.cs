@@ -81,6 +81,10 @@ public class Board : MonoBehaviour
 		//Vector3 tilePosition = tile.gameObject.transform.position;
 		
 		if(canPerformMove(ball,myTile,tile, ball.GetComponent<GamePiece>().pieceMaxMoves)){
+			//Se for ranged mostra pecas que pode atacar
+			//if(ball.GetComponent<GamePiece>().maxRangeAtack > 1)
+			
+			
 			if(PhotonNetwork.connected){
 				photonView.RPC("movePiece", PhotonTargets.All,currentTarget.transform.position,x,z,ball.GetComponent<GamePiece>().id);
 			}else{
@@ -121,9 +125,9 @@ public class Board : MonoBehaviour
 		//iTween.MoveTo(ball, iTween.Hash("position", tile.transform.position, "islocal", true, "time", 1,"oncomplete","Reset"));
 		//iTween.MoveBy(ball,iTween.Hash("x",targetPosition.x-ball.transform.position.x,"easetype","easeinoutsine","time",travelTime));
 		//iTween.MoveBy(ball,iTween.Hash("z",targetPosition.z-ball.transform.position.z,"time",travelTime,"delay",0,"easetype","easeinoutsine","oncomplete","Reset","oncompletetarget",gameObject));
-		
-		iTween.MoveBy(ball,iTween.Hash("x",targetPosition.x-ball.transform.position.x,"easetype","easeinoutsine","time",travelTime));
-		iTween.MoveBy(ball,iTween.Hash("z",targetPosition.z-ball.transform.position.z,"time",travelTime,"delay",travelTime,"easetype","easeinoutsine","oncomplete","Reset","oncompletetarget",gameObject));
+		ball.transform.position = targetPosition;
+		//iTween.MoveBy(ball,iTween.Hash("x",targetPosition.x-ball.transform.position.x,"easetype","easeinoutsine","time",travelTime));
+		//iTween.MoveBy(ball,iTween.Hash("z",targetPosition.z-ball.transform.position.z,"time",travelTime,"delay",travelTime,"easetype","easeinoutsine","oncomplete","Reset","oncompletetarget",gameObject));
 		
 	}
 	
@@ -163,6 +167,7 @@ public class Board : MonoBehaviour
 	
 	
 	void Reset(){
+		//showTargets();
 		ballSet=true;
 	}
 		
@@ -378,24 +383,16 @@ public class Board : MonoBehaviour
 			Debug.Log(tile.gameObject.transform.position.x.ToString() + "|" +tile.gameObject.transform.position.z.ToString() + tile.gameObject.name.ToString());
 			
 			int piece = pieceGameObject.GetComponent<GamePiece>().id;
-						
 			this.selectedPiece = piece;	
 			
 			//gamePieces[piece].GetComponent<GamePiece>().isUp = true;
-			for(int i=0; i< gamePieces.Length; i++){
-				if(gamePieces[i]!=null){
-					if(gamePieces[i].GetComponent<GamePiece>().playerBelong == playerNumber && gamePieces[i].GetComponent<GamePiece>().isUp){
-						iTween.MoveTo(gamePieces[i], new Vector3(gamePieces[i].transform.position.x,.15f,gamePieces[i].transform.position.z),.2f);	
-						gamePieces[i].GetComponent<GamePiece>().isUp = false;
-					}
-				}
-			}
-			
+			returnPiecesNaturalState();
+			showTargets();
 			if(PhotonNetwork.connected){
 				photonView.RPC("_selectPiece", PhotonTargets.All,piece);
 			}else{
 				networkView.RPC("_selectPiece",RPCMode.All,piece);	
-			}	
+			}
 		}
 		
 	}
@@ -409,6 +406,20 @@ public class Board : MonoBehaviour
 		gamePieces[piece].GetComponent<GamePiece>().isUp = true;
 		iTween.MoveTo((GameObject)gamePieces[piece], new Vector3(gamePieces[piece].transform.position.x,.5f,gamePieces[piece].transform.position.z),.2f);
 	}
+	
+	// retorna pecas selecionadas para o seu stado normal.
+	public void returnPiecesNaturalState(){
+		for(int i=0; i< gamePieces.Length; i++){
+			if(gamePieces[i]!=null){
+				if(gamePieces[i].GetComponent<GamePiece>().playerBelong == playerNumber && gamePieces[i].GetComponent<GamePiece>().isUp){
+					iTween.MoveTo(gamePieces[i], new Vector3(gamePieces[i].transform.position.x,.15f,gamePieces[i].transform.position.z),.2f);	
+					gamePieces[i].GetComponent<GamePiece>().isUp = false;
+				}
+			}
+		}
+	}
+	
+	
 	
 	
 	
@@ -444,6 +455,11 @@ public class Board : MonoBehaviour
 							montainsCrosseds++;
 							canAtack = false;	
 						}
+						/*
+						if(gameTiles[myX,myZ].GetComponent<GameTile>().getPieceType().Equals("water")){
+							
+						}
+						*/
 						myX++;
 					}
 				}
@@ -489,6 +505,7 @@ public class Board : MonoBehaviour
 			}
 		}
 		
+
 		//poder de atravessar montanhas
 		if(montainsCrosseds>0){
 			if(me.GetComponent<GamePiece>().montainsCanCross >= montainsCrosseds)
@@ -509,6 +526,8 @@ public class Board : MonoBehaviour
 		}
 		
 		if(canAtack){
+			//retorna a peca selecionada para o lugar dela.
+			
 			if(PhotonNetwork.connected){
 				photonView.RPC("_atackRpc", PhotonTargets.All,target.GetComponent<GamePiece>().id);
 			}else{
@@ -517,6 +536,84 @@ public class Board : MonoBehaviour
 			SetTarget(getTileByPiece(target));
 		}		
 	}
+	
+	//---------------------------------------------
+	//-------------------------------------------
+	//
+	// MOSTRA AS PECAS NO RANGE DE ATAQUE 
+	//
+	
+	void showTargets(){
+		me = (GameObject) getSelectedPiece();
+		//Debug.Log (me.gameObject.name.ToString()+">>aaaaaaaa");
+		
+		GameObject myTile = gameTiles[me.GetComponent<GamePiece>().onMeX, me.GetComponent<GamePiece>().onMeZ];		
+		int atackRange = me.GetComponent<GamePiece>().maxRangeAtack;
+		int x 	= myTile.GetComponent<GameTile>().x;
+		int z		= myTile.GetComponent<GameTile>().z;
+		
+		for(int i= 0; i<10; i++){
+			for(int j= 0; j<10; j++){
+				gameTiles[i,j].GetComponent<GameTile>().clearTarget();
+			}
+		}
+		
+		int myX = x;
+		while(myX <= (x + atackRange)){
+			try{
+				checkAndPaintTile(gameTiles[myX,z]);
+			}catch{
+				myX = (x + atackRange);
+			}
+			myX++;
+		}
+		
+		myX = x;
+		while(myX >= (x - atackRange)){
+			try{
+				checkAndPaintTile(gameTiles[myX,z]);	
+			}catch{
+				myX = (x - atackRange);
+			}
+			
+			myX--;
+		}
+		
+		int myZ = z;
+		while(myZ <= (z + atackRange)){
+			try{
+				checkAndPaintTile(gameTiles[x,myZ]);
+			}catch{
+				myZ = (z + atackRange);
+			}
+			
+			myZ++;
+		}	
+		
+		myZ = z;
+		while(myZ >= (z-atackRange)){
+			try{
+				checkAndPaintTile(gameTiles[x,myZ]);	
+			}catch{
+				myZ = (z-atackRange);
+			}
+			myZ--;
+		}
+				
+	}
+	
+	void checkAndPaintTile(GameObject tile){
+		
+		if(tile.GetComponent<GameTile>().onMeId != 99999){
+			GameObject character = gamePieces[tile.GetComponent<GameTile>().onMeId];
+			if(character.GetComponent<GamePiece>().playerBelong != gameManager.getPlayerId()){
+				tile.GetComponent<GameTile>().isTarget();	
+			}
+		}
+		
+	}
+	
+	
 	
 	[RPC]
 	void _atackRpc(int pieceId){
