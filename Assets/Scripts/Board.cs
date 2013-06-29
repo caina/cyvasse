@@ -21,6 +21,11 @@ public class Board : MonoBehaviour
 	public int playerNumber;
 	private int createdGrounds = 0;
 	
+	public AudioClip audioSourceWrong;
+	public AudioClip audioSourceMoveLevel1;
+	public AudioClip audioSourceMoveLevel2;
+	public AudioClip audioSourceMoveLevel3;
+	
 	public string hintText="";
 	
 	public GameObject groundOfSelected = null;
@@ -53,7 +58,7 @@ public class Board : MonoBehaviour
 		ball = getSelectedPiece();
 			}
 	**/
-	public void SetTarget(GameObject target){
+	public void SetTarget(GameObject target, bool forceChangeRound){
 		if(currentTarget != null && target!=currentTarget){
 			currentTarget.SendMessage("Deactivate");
 		}
@@ -90,14 +95,19 @@ public class Board : MonoBehaviour
 			}else{
 				networkView.RPC("movePiece",RPCMode.All,currentTarget.transform.position,x,z,ball.GetComponent<GamePiece>().id);	
 			}
+			showTargets();
 			gameManager.changeRound();
 		}else{
+			if(forceChangeRound)
+				gameManager.changeRound();
 			hintText="Personagem nao chega no destino.";
 			Debug.Log("Nao posso ir tao longe =(");	
 			ball = null;
 			tile = null;
 			myTile = null;
 			ballSet=true;
+			gameObject.audio.clip = audioSourceWrong;
+			gameObject.audio.Play();
 		}
 		
 		/*
@@ -125,7 +135,18 @@ public class Board : MonoBehaviour
 		//iTween.MoveTo(ball, iTween.Hash("position", tile.transform.position, "islocal", true, "time", 1,"oncomplete","Reset"));
 		//iTween.MoveBy(ball,iTween.Hash("x",targetPosition.x-ball.transform.position.x,"easetype","easeinoutsine","time",travelTime));
 		//iTween.MoveBy(ball,iTween.Hash("z",targetPosition.z-ball.transform.position.z,"time",travelTime,"delay",0,"easetype","easeinoutsine","oncomplete","Reset","oncompletetarget",gameObject));
+		targetPosition.y = 0.15f;
 		ball.transform.position = targetPosition;
+		
+		
+		if(ball.GetComponent<GamePiece>().powerLevel <3){
+			gameObject.audio.clip = audioSourceMoveLevel1;	
+		}else if(ball.GetComponent<GamePiece>().powerLevel < 4){
+			gameObject.audio.clip = audioSourceMoveLevel2;
+		}else{
+			gameObject.audio.clip = audioSourceMoveLevel3;
+		}
+		gameObject.audio.Play();
 		//iTween.MoveBy(ball,iTween.Hash("x",targetPosition.x-ball.transform.position.x,"easetype","easeinoutsine","time",travelTime));
 		//iTween.MoveBy(ball,iTween.Hash("z",targetPosition.z-ball.transform.position.z,"time",travelTime,"delay",travelTime,"easetype","easeinoutsine","oncomplete","Reset","oncompletetarget",gameObject));
 		
@@ -245,7 +266,7 @@ public class Board : MonoBehaviour
 					ballPosition.y = .15f;
 						
 					creatingTempObject = getGamePieceByPosition(createdObjects,1);
-					ball = (GameObject)Instantiate(creatingTempObject, ballPosition,Quaternion.identity);
+					ball = (GameObject)Instantiate(creatingTempObject, ballPosition,Quaternion.Euler(0,90,0));
 					
 					ball.GetComponent<GamePiece>().id = createdObjects;
 					ball.GetComponent<GamePiece>().onMeX = i;
@@ -282,7 +303,7 @@ public class Board : MonoBehaviour
 					ballPosition.y = .15f;
 					
 					creatingTempObject = getGamePieceByPosition(createdObjects-numberPlayersPieces,2);
-					ball = (GameObject)Instantiate(creatingTempObject, ballPosition,Quaternion.identity);
+					ball = (GameObject)Instantiate(creatingTempObject, ballPosition,Quaternion.Euler(0,270,0));
 					//ball = (GameObject)Instantiate((GameObject)Resources.Load("GameBall"), ballPosition,Quaternion.identity);
 					
 					ball.GetComponent<GamePiece>().id = createdObjects;
@@ -437,83 +458,15 @@ public class Board : MonoBehaviour
 		int targetX = targetTile.GetComponent<GameTile>().x;
 		int targetZ	= targetTile.GetComponent<GameTile>().z;
 		
-		Debug.Log (myX.ToString() + "-" + myZ.ToString() + "|" + targetX.ToString() + "-"+targetZ.ToString());
-		bool canAtack = false;
+		//Debug.Log (myX.ToString() + "-" + myZ.ToString() + "|" + targetX.ToString() + "-"+targetZ.ToString());
+		bool canAtack = true;
 		
 		if(myZ != targetZ && myX != targetX){
 			canAtack = false;	
 		}
-		int montainsCrosseds = 0;
-		if(myZ == targetZ){
-			//so calcular o x!
-			if(myX < targetX){
-				//	na direita
-				if((myX + movesCanPerform) >= targetX){
-					canAtack = true;
-					while(myX <= targetX){
-						if(gameTiles[myX,myZ].GetComponent<GameTile>().getPieceType().Equals("montain")){
-							montainsCrosseds++;
-							canAtack = false;	
-						}
-						/*
-						if(gameTiles[myX,myZ].GetComponent<GameTile>().getPieceType().Equals("water")){
-							
-						}
-						*/
-						myX++;
-					}
-				}
-			}else{
-				//na esquerda
-				if((myX - movesCanPerform) <= targetX){
-					canAtack = true;
-					while(myX >= targetX){
-						if(gameTiles[myX,myZ].GetComponent<GameTile>().getPieceType().Equals("montain")){
-							montainsCrosseds++;
-							canAtack = false;	
-						}
-						myX--;
-					}
-				}
-			}
-		}else if(myX == targetX){
-			//so calcular o Z
-			if(myZ < targetZ){
-				//	a cima
-				if((myZ + movesCanPerform) >= targetZ){
-					canAtack = true;
-					while(myZ <= targetZ){
-						if(gameTiles[myX,myZ].GetComponent<GameTile>().getPieceType().Equals("montain")){
-							montainsCrosseds++;
-							canAtack = false;	
-						}
-						myZ++;
-					}
-				}
-			}else{
-				//a baixo
-				if((myZ - movesCanPerform) <= targetZ){
-					canAtack = true;
-					while(myZ >= targetZ){
-						if(gameTiles[myX,myZ].GetComponent<GameTile>().getPieceType().Equals("montain")){
-							montainsCrosseds++;
-							canAtack = false;	
-						}
-						myZ--;
-					}
-				}
-			}
-		}
 		
-
-		//poder de atravessar montanhas
-		if(montainsCrosseds>0){
-			if(me.GetComponent<GamePiece>().montainsCanCross >= montainsCrosseds)
-				canAtack = true;
-		}
-		
-	 	GameObject targetPiece = (GameObject) gamePieces[targetTile.GetComponent<GameTile>().onMeId];
-		if(me.GetComponent<GamePiece>().powerLevel < targetPiece.GetComponent<GamePiece>().powerLevel){
+		GameObject targetPiece = (GameObject) gamePieces[targetTile.GetComponent<GameTile>().onMeId];
+		if((me.GetComponent<GamePiece>().powerLevel < targetPiece.GetComponent<GamePiece>().powerLevel) && (!targetPiece.GetComponent<GamePiece>().myType.Equals("king"))){
 			hintText="Voce e muito fraco para isso.";
 			canAtack=false;
 		}
@@ -525,16 +478,106 @@ public class Board : MonoBehaviour
 			}
 		}
 		
+		if(myTile.GetComponent<GameTile>().getPieceType().Equals("water")){
+			string myType = me.GetComponent<GamePiece>().myType;
+			if(myType.Equals("catapult") || myType.Equals("crossbown") || myType.Equals("trabuco") ){
+				canAtack = false;
+				hintText = "Cataputas, Arquiros e Trabucos apenas atacam em terra";
+			}
+		}
+		
+		
+		
+		int montainsCrosseds = 0;
+		if(canAtack){
+			if(myZ == targetZ){
+				//so calcular o x!
+				if(myX < targetX){
+					//	na direita
+					if((myX + movesCanPerform) >= targetX){
+						canAtack = true;
+						while(myX <= targetX){
+							if(gameTiles[myX,myZ].GetComponent<GameTile>().getPieceType().Equals("montain")){
+								montainsCrosseds++;
+								canAtack = false;	
+							}
+							/*
+							if(gameTiles[myX,myZ].GetComponent<GameTile>().getPieceType().Equals("water")){
+								
+							}
+							*/
+							myX++;
+						}
+					}
+				}else{
+					//na esquerda
+					if((myX - movesCanPerform) <= targetX){
+						canAtack = true;
+						while(myX >= targetX){
+							if(gameTiles[myX,myZ].GetComponent<GameTile>().getPieceType().Equals("montain")){
+								montainsCrosseds++;
+								canAtack = false;	
+							}
+							myX--;
+						}
+					}
+				}
+			}else if(myX == targetX){
+				//so calcular o Z
+				if(myZ < targetZ){
+					//	a cima
+					if((myZ + movesCanPerform) >= targetZ){
+						canAtack = true;
+						while(myZ <= targetZ){
+							if(gameTiles[myX,myZ].GetComponent<GameTile>().getPieceType().Equals("montain")){
+								montainsCrosseds++;
+								canAtack = false;	
+							}
+							myZ++;
+						}
+					}
+				}else{
+					//a baixo
+					if((myZ - movesCanPerform) <= targetZ){
+						canAtack = true;
+						while(myZ >= targetZ){
+							if(gameTiles[myX,myZ].GetComponent<GameTile>().getPieceType().Equals("montain")){
+								montainsCrosseds++;
+								canAtack = false;	
+							}
+							myZ--;
+						}
+					}
+				}
+			}
+		}
+		
+
+		//poder de atravessar montanhas
+		if(montainsCrosseds>0 ){
+			if(me.GetComponent<GamePiece>().montainsCanCross >= montainsCrosseds){
+				canAtack = true;
+				
+			}else{
+				hintText = "Tem uma montanha no caminho";	
+			}
+		}
+		
+	 	
+		
 		if(canAtack){
 			//retorna a peca selecionada para o lugar dela.
 			
 			if(PhotonNetwork.connected){
-				photonView.RPC("_atackRpc", PhotonTargets.All,target.GetComponent<GamePiece>().id);
+				photonView.RPC("_atackRpc", PhotonTargets.All,target.GetComponent<GamePiece>().id,me.GetComponent<GamePiece>().id);
 			}else{
-				networkView.RPC("_atackRpc",RPCMode.All,target.GetComponent<GamePiece>().id);	
+				networkView.RPC("_atackRpc",RPCMode.All,target.GetComponent<GamePiece>().id,me.GetComponent<GamePiece>().id);	
 			}
-			SetTarget(getTileByPiece(target));
-		}		
+			SetTarget(getTileByPiece(target),true);
+		}else{
+			gameObject.audio.clip = audioSourceWrong;
+			gameObject.audio.Play();	
+		}
 	}
 	
 	//---------------------------------------------
@@ -616,8 +659,13 @@ public class Board : MonoBehaviour
 	
 	
 	[RPC]
-	void _atackRpc(int pieceId){
+	void _atackRpc(int pieceId, int meId){
+		GameObject me = gamePieces[meId];
+		me.animation.Play();
 		targetKill = (GameObject) gamePieces[pieceId];
+		
+		me.gameObject.transform.LookAt(targetKill.gameObject.transform);
+		
 		Vector3 positionExplode = targetKill.gameObject.transform.position;
 		GameObject killedTile = getTileByPiece(targetKill);
 		killedTile.GetComponent<GameTile>().onMeId = 99999;
@@ -627,7 +675,7 @@ public class Board : MonoBehaviour
 		gamePieces[pieceId] = null;
 		Instantiate(pieceKillEffect, positionExplode,Quaternion.identity);		
 	}
-	
+
 	public bool canPerformMove(GameObject character,GameObject myTile, GameObject targetTile, int movesCanPerform){
 		int myX 	= myTile.GetComponent<GameTile>().x;
 		int myZ		= myTile.GetComponent<GameTile>().z;

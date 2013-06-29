@@ -24,7 +24,8 @@ public class GameManager : MonoBehaviour {
 	private bool canPlay = true;
 	
 	public int rounds;
-
+	
+	public AudioClip audioSourceChangeRound;
 	
 	void Start(){
 		photonView = (PhotonView) this.GetComponent<PhotonView>();	
@@ -93,6 +94,8 @@ public class GameManager : MonoBehaviour {
 		foreach(GameObject light in lights){
 			iTween.ColorTo(light,lightColor,.3f);	
 		}
+		gameObject.audio.clip = audioSourceChangeRound;
+		gameObject.audio.Play();
 		
 		rounds++;
 	}
@@ -191,7 +194,7 @@ public class GameManager : MonoBehaviour {
 		if(!canPlay & hasConnection()){
 			GUILayout.BeginArea(new Rect((Screen.width - 400) / 2, (Screen.height - 300) / 2, 400, 300));
 		        GUILayout.Label("Aguardando o oponente");
-	        GUILayout.EndArea();
+			GUILayout.EndArea();
 		}
 		
 		GUILayout.BeginArea(new Rect(0, 0, 150, 500));

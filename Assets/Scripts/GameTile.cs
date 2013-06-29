@@ -39,7 +39,7 @@ public class GameTile : MonoBehaviour{
 		isActive=true;
 		
 		//photonView.RPC("moveBall",PhotonTargets.All);
-		gameBoard.SetTarget(this.gameObject);
+		gameBoard.SetTarget(this.gameObject,false);
 		//renderer.material.color=Color.red;
 	//	photonView.RPC("MoveBall", PhotonTargets.All,gameObject);
 		//gameBoard.SetTarget(gameObject);
@@ -128,7 +128,7 @@ public class GameTile : MonoBehaviour{
 	}
 	
 	void OnTriggerEnter(Collider collision) {
-		Debug.Log("colidi");
+		//Debug.Log("colidi");
 		if(collision.gameObject.tag=="BoardPiece"){
 			this.onMePiece = collision.gameObject;	
 		}  
@@ -146,7 +146,6 @@ public class GameTile : MonoBehaviour{
 	
 	public bool isFrozen(){
 		return pieceType.Equals("montain");
-		
 	}
 		
 	public void changeType(string type){
