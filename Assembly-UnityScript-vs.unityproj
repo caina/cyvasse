@@ -44,6 +44,7 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Necromancer GUI\GUITestScript.js" />
      <Compile Include="Assets\Scripts\MouseOrbit.js" />
      <Compile Include="Assets\effects\pack\Particles\Legacy Particles\TimedObjectDestructor.js" />
      <Compile Include="Assets\effects\pack\Scripts\Camera Scripts\SmoothFollow.js" />
@@ -53,7 +54,9 @@
      <None Include="Assets\effects\pack\Particles\Sources\Shaders\Particle Alpha Blend (Queue +100).shader" />
      <None Include="Assets\Photon Unity Networking\changelog.txt" />
      <None Include="Assets\Photon Unity Networking\Plugins\PhotonNetwork\library\Photon3Unity3D.xml" />
+     <None Include="Assets\Necromancer GUI\Kingthings.txt" />
      <None Include="Assets\Plugins\Standard Assets\Particles\Sources\Shaders\Particle Alpha Blend (Queue +100).shader" />
+     <None Include="Assets\Necromancer GUI\Readme.txt" />
      <None Include="Assets\Plugins\Cartoon FX\Shaders\CFX2 Particle Alpha Blend Tint.shader" />
      <None Include="Assets\Photon Unity Networking\readme.txt" />
      <None Include="Assets\Gem Shader\diamond shader.shader" />

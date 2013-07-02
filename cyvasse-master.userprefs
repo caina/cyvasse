@@ -1,14 +1,6 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\MouseOrbit.js">
-    <Files>
-      <File FileName="Assets\Scripts\Board.cs" Line="318" Column="43" />
-      <File FileName="Assets\Scripts\GamePiece.cs" Line="30" Column="24" />
-      <File FileName="Assets\Scripts\GameManager.cs" Line="201" Column="52" />
-      <File FileName="Assets\Scripts\GameTile.cs" Line="97" Column="30" />
-      <File FileName="Assets\Scripts\MouseOrbit.js" Line="14" Column="1" />
-    </Files>
-  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace />
+  <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

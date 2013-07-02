@@ -23,6 +23,11 @@ public class GameManager : MonoBehaviour {
 	public GameObject gameGate;
 	private bool canPlay = true;
 	
+	private bool isWinner = false;
+	private bool isGameOver = false;
+	
+	public Texture winnerScreen;
+	public Texture loserScreen;
 	public int rounds;
 	
 	public AudioClip audioSourceChangeRound;
@@ -191,12 +196,23 @@ public class GameManager : MonoBehaviour {
 	
     void OnGUI()
     {
+		if(isGameOver){
+			if(isWinner){
+				
+				GUI.DrawTexture(new Rect(0, 0, Screen.width,Screen.height), winnerScreen, ScaleMode.ScaleToFit, true, 0);	
+			}else{
+				GUI.DrawTexture(new Rect(0, 0, Screen.width,Screen.height), loserScreen, ScaleMode.ScaleToFit, true, 0);	
+			}
+			return;
+		}
+		
+		
 		if(!canPlay & hasConnection()){
 			GUILayout.BeginArea(new Rect((Screen.width - 400) / 2, (Screen.height - 300) / 2, 400, 300));
 		        GUILayout.Label("Aguardando o oponente");
 			GUILayout.EndArea();
 		}
-		
+				
 		GUILayout.BeginArea(new Rect(0, 0, 150, 500));
 			GUILayout.BeginHorizontal();
 				if(!imReady && hasConnection() && canPlay){
@@ -275,5 +291,19 @@ public class GameManager : MonoBehaviour {
 	public int getPlayerId(){
 		return playerId;	
 	}
-  
+  	
+	public void gameOver(int loser){
+		if(PhotonNetwork.connected){
+			photonView.RPC("_gameOver", PhotonTargets.All,loser);
+		}else{
+			networkView.RPC("_gameOver",RPCMode.All,loser);
+		}
+	}
+	
+	[RPC]
+	public void _gameOver(int loser){
+		Camera.main.farClipPlane = Camera.main.nearClipPlane + 0.1f;
+		isWinner = (loser != playerId);
+		isGameOver = true;
+	}
 }

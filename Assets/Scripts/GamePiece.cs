@@ -43,4 +43,10 @@ public class GamePiece : MonoBehaviour {
 	void OnMouseExit(){
 		gameBoard.hideMovementOptions();
 	}
+	
+	public void setRotation(Transform trans){
+		
+		this.transform.LookAt(trans);
+		gameBoard.transform.rotation = Quaternion.Euler(0,gameObject.transform.rotation.y,gameObject.transform.rotation.z);
+	}
 }

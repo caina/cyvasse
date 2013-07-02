@@ -22,6 +22,7 @@ public class Board : MonoBehaviour
 	private int createdGrounds = 0;
 	
 	public AudioClip audioSourceWrong;
+	public AudioClip audioSourceKill;
 	public AudioClip audioSourceMoveLevel1;
 	public AudioClip audioSourceMoveLevel2;
 	public AudioClip audioSourceMoveLevel3;
@@ -63,6 +64,13 @@ public class Board : MonoBehaviour
 			currentTarget.SendMessage("Deactivate");
 		}
 		
+		//"bug"
+		if(gameManager.isOnMountPhase()){
+			if(target.GetComponent<GameTile>().hasGround()){
+				return;
+			}
+		}
+		
 		if(!hasPieceSelected()){
 			return;	
 		}
@@ -98,16 +106,20 @@ public class Board : MonoBehaviour
 			showTargets();
 			gameManager.changeRound();
 		}else{
-			if(forceChangeRound)
+			if(forceChangeRound){
 				gameManager.changeRound();
-			hintText="Personagem nao chega no destino.";
-			Debug.Log("Nao posso ir tao longe =(");	
+			}else{
+				hintText="Personagem nao chega no destino.";
+				Debug.Log("Nao posso ir tao longe =(");		
+				gameObject.audio.clip = audioSourceWrong;
+				gameObject.audio.Play();
+			}
+			
 			ball = null;
 			tile = null;
 			myTile = null;
 			ballSet=true;
-			gameObject.audio.clip = audioSourceWrong;
-			gameObject.audio.Play();
+			
 		}
 		
 		/*
@@ -459,7 +471,7 @@ public class Board : MonoBehaviour
 		int targetZ	= targetTile.GetComponent<GameTile>().z;
 		
 		//Debug.Log (myX.ToString() + "-" + myZ.ToString() + "|" + targetX.ToString() + "-"+targetZ.ToString());
-		bool canAtack = true;
+		bool canAtack = false;
 		
 		if(myZ != targetZ && myX != targetX){
 			canAtack = false;	
@@ -487,74 +499,82 @@ public class Board : MonoBehaviour
 		}
 		
 		
-		
 		int montainsCrosseds = 0;
-		if(canAtack){
-			if(myZ == targetZ){
-				//so calcular o x!
-				if(myX < targetX){
-					//	na direita
-					if((myX + movesCanPerform) >= targetX){
-						canAtack = true;
-						while(myX <= targetX){
-							if(gameTiles[myX,myZ].GetComponent<GameTile>().getPieceType().Equals("montain")){
-								montainsCrosseds++;
-								canAtack = false;	
-							}
-							/*
-							if(gameTiles[myX,myZ].GetComponent<GameTile>().getPieceType().Equals("water")){
-								
-							}
-							*/
-							myX++;
+		if(myZ == targetZ){
+			//so calcular o x!
+			if(myX < targetX){
+				//	na direita
+				if((myX + movesCanPerform) >= targetX){
+					canAtack = true;
+					while(myX <= targetX){
+						if(gameTiles[myX,myZ].GetComponent<GameTile>().getPieceType().Equals("montain")){
+							montainsCrosseds++;
+							canAtack = false;	
 						}
-					}
-				}else{
-					//na esquerda
-					if((myX - movesCanPerform) <= targetX){
-						canAtack = true;
-						while(myX >= targetX){
-							if(gameTiles[myX,myZ].GetComponent<GameTile>().getPieceType().Equals("montain")){
-								montainsCrosseds++;
-								canAtack = false;	
-							}
-							myX--;
+						/*
+						if(gameTiles[myX,myZ].GetComponent<GameTile>().getPieceType().Equals("water")){
+							
 						}
+						*/
+						myX++;
 					}
+					if(canAtack)
+						Debug.Log("X na direita me deixou atacar: "+myX.ToString()+ " - "+targetX.ToString());
 				}
-			}else if(myX == targetX){
-				//so calcular o Z
-				if(myZ < targetZ){
-					//	a cima
-					if((myZ + movesCanPerform) >= targetZ){
-						canAtack = true;
-						while(myZ <= targetZ){
-							if(gameTiles[myX,myZ].GetComponent<GameTile>().getPieceType().Equals("montain")){
-								montainsCrosseds++;
-								canAtack = false;	
-							}
-							myZ++;
+			}else{
+				//na esquerda
+				if((myX - movesCanPerform) <= targetX){
+					canAtack = true;
+					while(myX >= targetX){
+						if(gameTiles[myX,myZ].GetComponent<GameTile>().getPieceType().Equals("montain")){
+							montainsCrosseds++;
+							canAtack = false;	
 						}
+						myX--;
 					}
-				}else{
-					//a baixo
-					if((myZ - movesCanPerform) <= targetZ){
-						canAtack = true;
-						while(myZ >= targetZ){
-							if(gameTiles[myX,myZ].GetComponent<GameTile>().getPieceType().Equals("montain")){
-								montainsCrosseds++;
-								canAtack = false;	
-							}
-							myZ--;
+					
+					if(canAtack)
+						Debug.Log("X na esquerda me deixou atacar: "+myX.ToString()+ " - "+targetX.ToString());
+				}
+			}
+		}else if(myX == targetX){
+			//so calcular o Z
+			if(myZ < targetZ){
+				//	a cima
+				if((myZ + movesCanPerform) >= targetZ){
+					canAtack = true;
+					while(myZ <= targetZ){
+						if(gameTiles[myX,myZ].GetComponent<GameTile>().getPieceType().Equals("montain")){
+							montainsCrosseds++;
+							canAtack = false;	
 						}
+						myZ++;
 					}
+					if(canAtack)
+						Debug.Log("Z na cima me deixou atacar: "+myZ.ToString()+ " - "+targetZ.ToString());
+				}
+			}else{
+				//a baixo
+				if((myZ - movesCanPerform) <= targetZ){
+					canAtack = true;
+					while(myZ >= targetZ){
+						if(gameTiles[myX,myZ].GetComponent<GameTile>().getPieceType().Equals("montain")){
+							montainsCrosseds++;
+							canAtack = false;	
+						}
+						myZ--;
+					}
+					if(canAtack)
+						Debug.Log("Z na baixo me deixou atacar: "+myZ.ToString()+ " - "+targetZ.ToString());
 				}
 			}
 		}
 		
+		
+		
 
 		//poder de atravessar montanhas
-		if(montainsCrosseds>0 ){
+		if(montainsCrosseds > 0 ){
 			if(me.GetComponent<GamePiece>().montainsCanCross >= montainsCrosseds){
 				canAtack = true;
 				
@@ -664,8 +684,17 @@ public class Board : MonoBehaviour
 		me.animation.Play();
 		targetKill = (GameObject) gamePieces[pieceId];
 		
-		me.gameObject.transform.LookAt(targetKill.gameObject.transform);
+		gameObject.audio.clip = audioSourceKill;
+		gameObject.audio.Play();
 		
+		
+		if(targetKill.GetComponent<GamePiece>().myType.Equals("king")){
+			hintText = "King Slayer!";
+			gameManager.gameOver(targetKill.GetComponent<GamePiece>().playerBelong);
+		}
+		
+		me.gameObject.GetComponent<GamePiece>().setRotation(targetKill.gameObject.transform);
+			
 		Vector3 positionExplode = targetKill.gameObject.transform.position;
 		GameObject killedTile = getTileByPiece(targetKill);
 		killedTile.GetComponent<GameTile>().onMeId = 99999;
@@ -673,7 +702,9 @@ public class Board : MonoBehaviour
 		Destroy(targetKill.gameObject);
 		
 		gamePieces[pieceId] = null;
-		Instantiate(pieceKillEffect, positionExplode,Quaternion.identity);		
+		Instantiate(pieceKillEffect, positionExplode,Quaternion.identity);	
+		
+		
 	}
 
 	public bool canPerformMove(GameObject character,GameObject myTile, GameObject targetTile, int movesCanPerform){
