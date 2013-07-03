@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour {
 	private int playersReady = 0;
 	private bool imReady = false;
 	public GameObject gameGate;
-	private bool canPlay = true;
+	private bool canPlay = false;
 	
 	private bool isWinner = false;
 	private bool isGameOver = false;
@@ -29,6 +29,8 @@ public class GameManager : MonoBehaviour {
 	public Texture winnerScreen;
 	public Texture loserScreen;
 	public int rounds;
+	
+	public GUISkin skin;
 	
 	public AudioClip audioSourceChangeRound;
 	
@@ -84,6 +86,8 @@ public class GameManager : MonoBehaviour {
 		foreach(GameObject light in lights){
 			iTween.ColorTo(light,lightColor,.3f);	
 		}
+		
+		
 	}
 	
 	[RPC]
@@ -102,6 +106,10 @@ public class GameManager : MonoBehaviour {
 		gameObject.audio.clip = audioSourceChangeRound;
 		gameObject.audio.Play();
 		
+		if(playerId == playerRound){
+			gameBoard.hintText = "Estamos no seu turno.";	
+		}
+		
 		rounds++;
 	}
 	
@@ -113,7 +121,12 @@ public class GameManager : MonoBehaviour {
 		if(onMountPhase) 
 			return true;
 		
-		return playerId == playerRound;
+		if(playerId == playerRound){
+			return true;
+		}
+		
+		gameBoard.hintText = "Espere seu turno";
+		return false;
 	}
     
     IEnumerator OnLeftRoom()
@@ -129,7 +142,7 @@ public class GameManager : MonoBehaviour {
     }
 	
     public void StartGame(){
-		Camera.main.farClipPlane = 1000; 
+		//Camera.main.farClipPlane = 1000; 
 		if(PhotonNetwork.connected){
 			photonView.RPC("PlayerConnected", PhotonTargets.All);
 		}else{
@@ -185,8 +198,8 @@ public class GameManager : MonoBehaviour {
 		canPlay = true;
 		Camera.main.farClipPlane = 1000; 
 		if(playerId==2){
-			Camera.main.transform.position = new Vector3(8.040245f,8.194799f,-0.0770278f);
-			Camera.main.transform.rotation = Quaternion.Euler(41.20966f, 270.1824f, 359.9654f);
+			Camera.main.transform.position = new Vector3(7.01f,4.5f,-0.3f);
+			Camera.main.transform.rotation = Quaternion.Euler(47.76001f, 270.1823f, 359.9654f);
 		}
 		startRounds();
 		// YUNO funciona?!!?!?!?
@@ -196,13 +209,28 @@ public class GameManager : MonoBehaviour {
 	
     void OnGUI()
     {
+		GUI.skin = skin;
+		
 		if(isGameOver){
 			if(isWinner){
-				
 				GUI.DrawTexture(new Rect(0, 0, Screen.width,Screen.height), winnerScreen, ScaleMode.ScaleToFit, true, 0);	
 			}else{
 				GUI.DrawTexture(new Rect(0, 0, Screen.width,Screen.height), loserScreen, ScaleMode.ScaleToFit, true, 0);	
 			}
+			
+			
+			GUILayout.BeginArea(new Rect( Screen.width-200, Screen.height-85,200, 50));
+		        
+				GUILayout.BeginHorizontal();
+					if (GUILayout.Button("Voltar")){
+						Network.Disconnect();
+		            	MasterServer.UnregisterHost();
+						Application.LoadLevel(0);
+	                }
+					
+        		GUILayout.EndHorizontal();
+	        GUILayout.EndArea();
+			
 			return;
 		}
 		
@@ -276,16 +304,17 @@ public class GameManager : MonoBehaviour {
 	
 	[RPC]
 	void _playerIsReady(){
+		gameBoard.hintText = "Terminei meu tabuleiro. Vamos Jogar!";
 		playersReady++;
 		if(playersReady == 2){
 			Destroy(gameGate);
 			onMountPhase = false;
-			
+		
+			Camera cam = (Camera)FindObjectOfType(typeof(Camera));
+			cam.gameObject.AddComponent("MouseOrbit");
+			gameBoard.hintText = "Use o botao direito para girar o cenario!";
 		}
-		//TODO COLOCAR NO IF DEPOIS DE TERMINAR OS TESTESS
-		Camera cam = (Camera)FindObjectOfType(typeof(Camera));
-		cam.gameObject.AddComponent("MouseOrbit");
-		gameBoard.hintText = "Use o botao direito para girar o cenario!";
+		
 	}
 	
 	public int getPlayerId(){

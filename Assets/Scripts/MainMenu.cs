@@ -10,9 +10,12 @@ public class MainMenu : MonoBehaviour{
 	private string ip = "localhost";
 	private int porta = 25000;
 	public GameManager gameManager;
+	public GUISkin guiCSS;
+	public Texture menuBg;
 	
     void Awake()
     {
+		
 		gameManager = (GameManager) this.GetComponent<GameManager>();
 		
         if (!PhotonNetwork.connected)
@@ -27,7 +30,7 @@ public class MainMenu : MonoBehaviour{
 	}
 
     void OnGUI(){
-		
+		GUI.skin = guiCSS;
 		if(isLocal)
 			return;//chega dessa putaria da feevale bloquear o photon
 		
@@ -122,27 +125,40 @@ public class MainMenu : MonoBehaviour{
     }
 	
 	void OnFailedToConnectToPhoton(DisconnectCause cause) {
-		this.GetComponent<Chat>().enabled = false;
+		//this.GetComponent<Chat>().enabled = false;
         isOffline = true;	
 	}
 	
 	void showOfflineGUI(){
 		//Debug.Log(isLocal);
 		if(Network.peerType == NetworkPeerType.Disconnected){
-			GUILayout.BeginArea(new Rect((Screen.width - 400) / 2, (Screen.height - 300) / 2, 400, 300));
-		        GUILayout.Label("Nao e possivel contatar o servidor Photon, conecte por LAN");
-					GUILayout.BeginHorizontal();
-				        GUILayout.Label("IP:", GUILayout.Width(50));
-				        ip = GUILayout.TextField(ip);
-						porta = int.Parse(GUILayout.TextField(porta.ToString()));
-						if (GUILayout.Button("Entrar")){
-							Network.Connect(ip,porta);
-		                }
-						if(GUILayout.Button ("Criar Servidor")){
-							Network.InitializeServer(25,porta, false);
-						}
-		        GUILayout.EndHorizontal();
-	        GUILayout.EndArea();	
+			GUI.DrawTexture(new Rect(0, 0, Screen.width,Screen.height), menuBg, ScaleMode.ScaleToFit, true, 0);	
+			GUILayout.BeginArea(new Rect(100, 270, 300, 320));
+		        //GUILayout.Label("Nao e possivel contatar o servidor Photon, conecte por LAN");
+				GUILayout.BeginHorizontal();
+		        	//GUILayout.Label("IP:", GUILayout.Width(50));
+			        ip = GUILayout.TextField(ip);
+					porta = int.Parse(GUILayout.TextField(porta.ToString()));
+				GUILayout.EndHorizontal();
+				GUILayout.BeginHorizontal();
+					if (GUILayout.Button("Entrar")){
+						Network.Connect(ip,porta);
+	                }
+					if(GUILayout.Button ("Criar Servidor")){
+						Network.InitializeServer(25,porta, false);
+					}
+        		GUILayout.EndHorizontal();
+	        GUILayout.EndArea();
+			
+			GUILayout.BeginArea(new Rect( Screen.width-200, Screen.height-80,200, 50));
+		        
+				GUILayout.BeginHorizontal();
+					if (GUILayout.Button("Sair")){
+						Application.Quit();
+	                }
+					
+        		GUILayout.EndHorizontal();
+	        GUILayout.EndArea();
 		}else{
 			Debug.Log("Connected to server");
 			isLocal = true;

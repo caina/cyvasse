@@ -28,6 +28,7 @@ public class Board : MonoBehaviour
 	public AudioClip audioSourceMoveLevel3;
 	
 	public string hintText="";
+	public GUISkin skin;
 	
 	public GameObject groundOfSelected = null;
 	
@@ -41,7 +42,8 @@ public class Board : MonoBehaviour
 	
 	void OnGUI()
     {
-		GUILayout.BeginArea(new Rect(15, Screen.height-25, 250, 250));
+		GUI.skin = skin;
+		GUILayout.BeginArea(new Rect(230, Screen.height-40, Screen.width-230, 250));
 			GUILayout.BeginHorizontal();
 				GUILayout.Label(hintText);
 	        GUILayout.EndHorizontal();
@@ -402,7 +404,7 @@ public class Board : MonoBehaviour
 		int z = pieceGameObject.GetComponent<GamePiece>().onMeZ;
 		
 		//Debug.Log(pieceGameObject.GetComponent<GamePiece>().playerBelong);
-		
+		showTargetInfo(pieceGameObject);
 		
 		if(hasPieceSelected() && (pieceGameObject.GetComponent<GamePiece>().playerBelong != playerNumber)){
 			atackPiece(pieceGameObject);
@@ -476,29 +478,9 @@ public class Board : MonoBehaviour
 		if(myZ != targetZ && myX != targetX){
 			canAtack = false;	
 		}
-		
 		GameObject targetPiece = (GameObject) gamePieces[targetTile.GetComponent<GameTile>().onMeId];
-		if((me.GetComponent<GamePiece>().powerLevel < targetPiece.GetComponent<GamePiece>().powerLevel) && (!targetPiece.GetComponent<GamePiece>().myType.Equals("king"))){
-			hintText="Voce e muito fraco para isso.";
-			canAtack=false;
-		}
 		
-		if(me.GetComponent<GamePiece>().myType.Equals("dragon")){
-			if(targetTile.GetComponent<GameTile>().getPieceType().Equals("forest")){
-				hintText="Dragoes nao podem atacar entre a floresta.";
-				canAtack = false;
-			}
-		}
-		
-		if(myTile.GetComponent<GameTile>().getPieceType().Equals("water")){
-			string myType = me.GetComponent<GamePiece>().myType;
-			if(myType.Equals("catapult") || myType.Equals("crossbown") || myType.Equals("trabuco") ){
-				canAtack = false;
-				hintText = "Cataputas, Arquiros e Trabucos apenas atacam em terra";
-			}
-		}
-		
-		
+
 		int montainsCrosseds = 0;
 		if(myZ == targetZ){
 			//so calcular o x!
@@ -509,7 +491,8 @@ public class Board : MonoBehaviour
 					while(myX <= targetX){
 						if(gameTiles[myX,myZ].GetComponent<GameTile>().getPieceType().Equals("montain")){
 							montainsCrosseds++;
-							canAtack = false;	
+							canAtack = false;
+							hintText = "Alvo fora do alcance";
 						}
 						/*
 						if(gameTiles[myX,myZ].GetComponent<GameTile>().getPieceType().Equals("water")){
@@ -529,6 +512,7 @@ public class Board : MonoBehaviour
 						if(gameTiles[myX,myZ].GetComponent<GameTile>().getPieceType().Equals("montain")){
 							montainsCrosseds++;
 							canAtack = false;	
+							hintText = "Alvo fora do alcance";
 						}
 						myX--;
 					}
@@ -546,7 +530,8 @@ public class Board : MonoBehaviour
 					while(myZ <= targetZ){
 						if(gameTiles[myX,myZ].GetComponent<GameTile>().getPieceType().Equals("montain")){
 							montainsCrosseds++;
-							canAtack = false;	
+							canAtack = false;
+							hintText = "Alvo fora do alcance";
 						}
 						myZ++;
 					}
@@ -561,6 +546,7 @@ public class Board : MonoBehaviour
 						if(gameTiles[myX,myZ].GetComponent<GameTile>().getPieceType().Equals("montain")){
 							montainsCrosseds++;
 							canAtack = false;	
+							hintText = "Alvo fora do alcance";
 						}
 						myZ--;
 					}
@@ -570,7 +556,25 @@ public class Board : MonoBehaviour
 			}
 		}
 		
+		if(me.GetComponent<GamePiece>().myType.Equals("dragon")){
+			if(targetTile.GetComponent<GameTile>().getPieceType().Equals("forest")){
+				hintText="Dragões nao podem atacar entre a floresta.";
+				canAtack = false;
+			}
+		}else{
+			if((me.GetComponent<GamePiece>().powerLevel < targetPiece.GetComponent<GamePiece>().powerLevel) && (!targetPiece.GetComponent<GamePiece>().myType.Equals("king"))){
+				hintText="Este personagem é muito fraco.";
+				canAtack=false;
+			}
+		}
 		
+		if(myTile.GetComponent<GameTile>().getPieceType().Equals("water")){
+			string myType = me.GetComponent<GamePiece>().myType;
+			if(myType.Equals("catapult") || myType.Equals("crossbown") || myType.Equals("trabuco") ){
+				canAtack = false;
+				hintText = "Cataputas, Arquiros e Trabucos apenas atacam em terra";
+			}
+		}
 		
 
 		//poder de atravessar montanhas
@@ -806,6 +810,7 @@ public class Board : MonoBehaviour
 		if(tile==null)
 			return;
 		
+		//showTargetInfo(selectedPiece);
 		int x = tile.GetComponent<GameTile>().x;
 		int z = tile.GetComponent<GameTile>().z;
 		int movements = selectedPiece.GetComponent<GamePiece>().pieceMaxMoves;
@@ -884,5 +889,9 @@ public class Board : MonoBehaviour
 		toTile.GetComponent<GameTile>().migrateTypes(fromTile);
 	}
 	
+	
+	void showTargetInfo(GameObject target){
+		hintText = "Personagem: "+target.GetComponent<GamePiece>().realName + " com poder de: "+target.GetComponent<GamePiece>().powerLevel.ToString();
+	}
 }
 

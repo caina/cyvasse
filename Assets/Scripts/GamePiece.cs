@@ -15,6 +15,7 @@ public class GamePiece : MonoBehaviour {
 	public int powerLevel;
 	public bool isUp = false;
 	public int montainsCanCross = 0;
+	public string realName = "";
 	// Use this for initialization
 	void Start () {
 	
@@ -47,6 +48,6 @@ public class GamePiece : MonoBehaviour {
 	public void setRotation(Transform trans){
 		
 		this.transform.LookAt(trans);
-		gameBoard.transform.rotation = Quaternion.Euler(0,gameObject.transform.rotation.y,gameObject.transform.rotation.z);
+		transform.rotation = Quaternion.Euler(0,gameObject.transform.rotation.y,gameObject.transform.rotation.z);
 	}
 }
