@@ -67,11 +67,11 @@ public class Board : MonoBehaviour
 		}
 		
 		//"bug"
-		if(gameManager.isOnMountPhase()){
+		/*if(gameManager.isOnMountPhase()){
 			if(target.GetComponent<GameTile>().hasGround()){
 				return;
 			}
-		}
+		}*/
 		
 		if(!hasPieceSelected()){
 			return;	
@@ -697,7 +697,7 @@ public class Board : MonoBehaviour
 			gameManager.gameOver(targetKill.GetComponent<GamePiece>().playerBelong);
 		}
 		
-		me.gameObject.GetComponent<GamePiece>().setRotation(targetKill.gameObject.transform);
+		//me.gameObject.GetComponent<GamePiece>().setRotation(targetKill.gameObject.transform);
 			
 		Vector3 positionExplode = targetKill.gameObject.transform.position;
 		GameObject killedTile = getTileByPiece(targetKill);
